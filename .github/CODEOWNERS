@@ -1,18 +1,18 @@
 # Auto-requests review from the track owner whenever their files change.
-# Update the GitHub usernames once everyone has push access.
+# Faruq = @Simplyauf · Abdullah = @abkaaar · Musa = @techbone
 
-/src/domain/   @FARUQ_GH_USERNAME
-/src/data/     @FARUQ_GH_USERNAME
-/src/store/    @FARUQ_GH_USERNAME
+/src/domain/   @Simplyauf
+/src/data/     @Simplyauf
+/src/store/    @Simplyauf
 
-/src/app/      @ABDULLAH_GH_USERNAME
-/src/ui/       @ABDULLAH_GH_USERNAME
-/src/hooks/    @ABDULLAH_GH_USERNAME
+/src/app/      @abkaaar
+/src/ui/       @abkaaar
+/src/hooks/    @abkaaar
 
-/src/services/ @MUSA_GH_USERNAME
-/app.config.ts @MUSA_GH_USERNAME
-/eas.json      @MUSA_GH_USERNAME
-/assets/       @MUSA_GH_USERNAME
+/src/services/ @techbone
+/app.config.ts @techbone
+/eas.json      @techbone
+/assets/       @techbone
 
 # Frozen seam — every PR touching contracts needs all three eyes.
-/src/contracts/ @FARUQ_GH_USERNAME @ABDULLAH_GH_USERNAME @MUSA_GH_USERNAME
+/src/contracts/ @Simplyauf @abkaaar @techbone

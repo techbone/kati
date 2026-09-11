@@ -10,6 +10,27 @@ RevenueCat Shipaton — Peace Prize category.
 See `docs/MILESTONES.md`. Submit to App Review on **Wed 23 Sep** — that date is
 the real deadline, everything after is rejection buffer.
 
+## Orienting yourself (read this first)
+
+Three people work in this repo on separate tracks, and **you only edit the files
+your track owns.** Work out which track you're on before changing anything —
+from the current branch prefix (`a/…`, `b/…`, `c/…`), from what the user says, or
+by asking them outright. Then read that brief:
+
+| Track | Owner | Owns | Brief |
+|---|---|---|---|
+| A — Engine | Faruq | `src/domain`, `src/data`, `src/store` | `docs/tracks/TRACK-A.md` |
+| B — Surface | Abdullah | `src/app`, `src/ui`, `src/hooks` | `docs/tracks/TRACK-B.md` |
+| C — Platform | Musa | `src/services`, `app.config.ts`, `eas.json`, `assets` | `docs/tracks/TRACK-C.md` |
+
+If a task needs a file outside the current track, **stop and say so** rather than
+editing it. Cross-track edits cause merge conflicts for two other people who are
+mid-change in the same file. The exception is `src/contracts/**`, which is frozen
+and needs agreement from all three owners — flag it, don't quietly change it.
+
+Also read `docs/ARCHITECTURE.md` before your first change. It explains *why* the
+layering is the way it is, which matters more than the rules themselves.
+
 ## Non-negotiables
 
 1. **No backend, no accounts, no network.** All data lives in on-device SQLite.
@@ -45,8 +66,9 @@ fires, the fix is almost never to add an exception.
 npm run verify     # typecheck + lint + test — must be green
 ```
 
-Nothing merges to `main` red. See `docs/TRACKS.md` for ownership and merge rules,
-`docs/SMOKE.md` for the on-device regression script.
+Nothing merges to `main` red — CI enforces it on every PR. See `docs/TRACKS.md`
+for ownership and merge rules, `docs/SMOKE.md` for the on-device regression
+script, and `docs/MILESTONES.md` for what's due when.
 
 ## Conventions
 

@@ -1,56 +1,108 @@
-# Welcome to your Expo app 👋
+# Kati
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An offline-first child immunization tracker built on Nigeria's national schedule.
 
-## Get started
+A parent enters a birth date and gets the full schedule, reminders before every
+clinic visit, and a record they can show at the clinic. It replaces the paper
+child health card that parents lose — that's the product, and it's the sentence
+everything else in here serves.
 
-1. Install dependencies
+Built for **RevenueCat Shipaton 2026**, Peace Prize category.
+**The app must be live on the App Store by Wed 30 Sep 2026, 11:45pm PDT.**
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## Start here
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+**1. Get it running (5 minutes)**
 
 ```bash
-npm run reset-project
+git clone git@github.com:techbone/kati.git
+cd kati
+npm install
+npm run verify     # typecheck + lint + test — should be green before you change anything
+npm start          # then press `i`, or scan the QR with Expo Go for UI-only work
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+> Anything touching RevenueCat needs an **EAS development build**, not Expo Go —
+> `react-native-purchases` is a native module. Musa is distributing dev builds.
+> You don't need one to start.
 
-### Other setup steps
+**2. Read these three files, in this order** — about fifteen minutes total, and
+it will save you a day:
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+| File | What it tells you |
+|---|---|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | How the app is shaped and *why* it's shaped that way |
+| [`docs/TRACKS.md`](docs/TRACKS.md) | Who owns which files, and the PR workflow |
+| **`docs/tracks/TRACK-<your letter>.md`** | Your actual job, with acceptance criteria |
 
-## Learn more
+**3. Find your track**
 
-To learn more about developing your project with Expo, look at the following resources:
+| Track | Owner | You own | Your brief |
+|---|---|---|---|
+| **A — Engine** | Faruq ([@Simplyauf](https://github.com/Simplyauf)) | `src/domain`, `src/data`, `src/store` | [TRACK-A.md](docs/tracks/TRACK-A.md) |
+| **B — Surface** | Abdullah ([@abkaaar](https://github.com/abkaaar)) | `src/app`, `src/ui`, `src/hooks` | [TRACK-B.md](docs/tracks/TRACK-B.md) |
+| **C — Platform** | Musa ([@techbone](https://github.com/techbone)) | `src/services`, `app.config.ts`, `eas.json`, `assets` | [TRACK-C.md](docs/tracks/TRACK-C.md) |
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## The four rules
 
-Join our community of developers creating universal apps.
+Everything else is negotiable. These aren't.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. **No backend, no accounts, no network.** All data is in on-device SQLite.
+   It's children's health data — this is a design decision, not a shortcut, and
+   it's why our App Store privacy label says *data not collected*.
+2. **Never guess a dose interval.** Every row in the schedule table cites NPHCDA
+   and is checked by a second person before it merges. A wrong interval here is
+   real-world harm, not a bug.
+3. **Never argue for or against vaccination in any copy.** Kati is a
+   record-keeping aid, not medical advice. That disclaimer ships in the app.
+4. **Only edit files your track owns.** See [`docs/TRACKS.md`](docs/TRACKS.md).
+   If you need something outside your track, ask — don't reach across.
+
+---
+
+## How the code is laid out
+
+```
+src/
+  contracts/   ← FROZEN. Types only. The shared vocabulary between all three tracks.
+  domain/      ← Track A. Pure TypeScript. No React, no Expo, no I/O, no clock reads.
+  data/        ← Track A. SQLite: migrations + repositories.
+  store/       ← Track A. Zustand. The ONLY thing the UI is allowed to read from.
+  services/    ← Track C. Every native side effect, behind an interface.
+  ui/, app/    ← Track B. Design system + Expo Router screens.
+docs/          ← Architecture, milestones, track briefs, smoke script.
+```
+
+The dependency rule, in one line:
+
+```
+app / ui  →  store  →  domain  →  contracts
+services  →  domain + native modules
+```
+
+This is **enforced by ESLint**, not by memory — [`eslint.config.js`](eslint.config.js)
+will fail your build if the UI imports from `src/data`, or if domain code imports
+React. If a rule fires at you, the fix is almost never to add an exception.
+
+---
+
+## Working agreement
+
+- Branch off `main`: `a/<topic>`, `b/<topic>`, `c/<topic>`.
+- `npm run verify` green **before** you open the PR.
+- Everyone PRs into `main`, Musa included. CI runs on every change equally.
+- Squash merge. Delete the branch. `git pull` before branching again.
+- Merge at least once a day. A three-day branch in a nineteen-day project is a
+  merge conflict with a countdown on it.
+
+Full detail and the reasoning: [`docs/TRACKS.md`](docs/TRACKS.md).
+
+## Where we are
+
+See [`docs/MILESTONES.md`](docs/MILESTONES.md). The date that actually matters is
+**Wed 23 Sep — submit to App Review**, not the 30th. That gives us room to absorb
+exactly one rejection.
