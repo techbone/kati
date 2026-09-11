@@ -1,0 +1,72 @@
+import type { ExpoConfig } from 'expo/config';
+
+/**
+ * Track C owns this file. Anyone else changing it must say so in standup —
+ * a plugin change invalidates everyone's development build.
+ */
+const config: ExpoConfig = {
+  name: 'Kati',
+  slug: 'kati',
+  version: '1.0.0',
+  orientation: 'portrait',
+  scheme: 'kati',
+  userInterfaceStyle: 'automatic',
+  icon: './assets/images/icon.png',
+
+  ios: {
+    // Must match the App Store Connect record exactly. Change only before the first build.
+    bundleIdentifier: 'com.kati.app',
+    // Judges download from the US — never geo-restrict the listing.
+    supportsTablet: false,
+    buildNumber: '1',
+    config: {
+      // Declares no non-exempt encryption, which skips the export-compliance
+      // question on every single submission. Saves minutes per upload.
+      usesNonExemptEncryption: false,
+    },
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+    },
+  },
+
+  android: {
+    package: 'com.kati.app',
+    adaptiveIcon: {
+      backgroundColor: '#E6F4FE',
+      foregroundImage: './assets/images/android-icon-foreground.png',
+      backgroundImage: './assets/images/android-icon-background.png',
+      monochromeImage: './assets/images/android-icon-monochrome.png',
+    },
+    predictiveBackGestureEnabled: false,
+  },
+
+  plugins: [
+    'expo-router',
+    'expo-sqlite',
+    'expo-localization',
+    'expo-sharing',
+    '@react-native-community/datetimepicker',
+    [
+      'expo-splash-screen',
+      {
+        backgroundColor: '#208AEF',
+        image: './assets/images/splash-icon.png',
+        imageWidth: 76,
+      },
+    ],
+    [
+      'expo-notifications',
+      {
+        icon: './assets/images/notification-icon.png',
+        color: '#208AEF',
+      },
+    ],
+  ],
+
+  experiments: {
+    typedRoutes: true,
+    reactCompiler: true,
+  },
+};
+
+export default config;
