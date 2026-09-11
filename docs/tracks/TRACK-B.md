@@ -1,6 +1,6 @@
 # Track B — Surface
 
-**Owner: Abdullah ([@abkaaar](https://github.com/abkaaar))**
+**Owner: Musa ([@techbone](https://github.com/techbone))**
 
 You own everything a judge and a parent actually see. The Peace Prize is scored
 on impact, but a panel forms its opinion in the first fifteen seconds of the
@@ -19,7 +19,7 @@ src/hooks/    view-level hooks
 
 ## You never touch
 
-`src/domain`, `src/data`, `src/store` (Faruq), `src/services` (Musa).
+`src/domain`, `src/data`, `src/store` (Faruq), `src/services` (Abdullah).
 
 ## You are not blocked on anyone
 

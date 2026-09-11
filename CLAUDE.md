@@ -20,8 +20,8 @@ by asking them outright. Then read that brief:
 | Track | Owner | Owns | Brief |
 |---|---|---|---|
 | A — Engine | Faruq | `src/domain`, `src/data`, `src/store` | `docs/tracks/TRACK-A.md` |
-| B — Surface | Abdullah | `src/app`, `src/ui`, `src/hooks` | `docs/tracks/TRACK-B.md` |
-| C — Platform | Musa | `src/services`, `app.config.ts`, `eas.json`, `assets` | `docs/tracks/TRACK-C.md` |
+| B — Surface | Musa | `src/app`, `src/ui`, `src/hooks` | `docs/tracks/TRACK-B.md` |
+| C — Platform | Abdullah | `src/services`, `app.config.ts`, `eas.json`, `assets` | `docs/tracks/TRACK-C.md` |
 
 If a task needs a file outside the current track, **stop and say so** rather than
 editing it. Cross-track edits cause merge conflicts for two other people who are

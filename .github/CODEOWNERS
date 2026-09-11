@@ -5,14 +5,14 @@
 /src/data/     @Simplyauf
 /src/store/    @Simplyauf
 
-/src/app/      @abkaaar
-/src/ui/       @abkaaar
-/src/hooks/    @abkaaar
+/src/app/      @techbone
+/src/ui/       @techbone
+/src/hooks/    @techbone
 
-/src/services/ @techbone
-/app.config.ts @techbone
-/eas.json      @techbone
-/assets/       @techbone
+/src/services/ @abkaaar
+/app.config.ts @abkaaar
+/eas.json      @abkaaar
+/assets/       @abkaaar
 
 # Frozen seam — every PR touching contracts needs all three eyes.
 /src/contracts/ @Simplyauf @abkaaar @techbone

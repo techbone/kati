@@ -1,6 +1,6 @@
 # Track C — Platform
 
-**Owner: Musa ([@techbone](https://github.com/techbone))**
+**Owner: Abdullah ([@abkaaar](https://github.com/abkaaar))**
 
 You own everything between the code and the App Store, plus every native side
 effect. Your track has the least code and the most risk, because most of it
@@ -21,7 +21,7 @@ dashboard, TestFlight, submission.
 
 ## You never touch
 
-`src/domain`, `src/data`, `src/store` (Faruq), `src/app`, `src/ui` (Abdullah).
+`src/domain`, `src/data`, `src/store` (Faruq), `src/app`, `src/ui` (Musa).
 
 ## The shape of your layer
 
@@ -44,6 +44,21 @@ split is what makes the notification logic testable without a device.
 
 These three gate other people's work. Nothing else you do today matters as much.
 
+### C0. Confirm you actually hold the accounts
+
+Before anything else, check you have — not "can get" — these three:
+
+- **Apple Developer Program**, enrolled, with the Paid Apps agreement signed and
+  banking and tax forms complete. Without the agreements, in-app purchase
+  products cannot go live no matter what the code does.
+- **App Store Connect** access at App Manager level or above.
+- **RevenueCat** account.
+
+If any of these sits with Musa instead, sort the access transfer *this morning* —
+he adds you in App Store Connect under Users and Access. Apple's account plumbing
+is the one thing on this project that moves at its own pace and cannot be
+compressed by working harder.
+
 ### C1. EAS dev build on all three phones
 
 ```bash
@@ -54,7 +69,7 @@ npm run dev:build        # eas build --profile development --platform ios
 ```
 
 `react-native-purchases` is a native module — **it does not run in Expo Go**.
-Until this build exists, nobody can see a paywall. Faruq and Abdullah can work
+Until this build exists, nobody can see a paywall. Faruq and Musa can work
 without it (domain tests and UI run fine in Expo Go), but it must land before M4.
 
 Register all three devices' UDIDs while you're in there, or you'll do the whole

@@ -17,9 +17,9 @@ src/store/     the Zustand store the UI reads from
 
 ## You never touch
 
-`src/app`, `src/ui`, `src/hooks` (Abdullah), `src/services` (Musa).
-If you need a screen changed, ask Abdullah. If you need a native capability,
-ask Musa for the interface.
+`src/app`, `src/ui`, `src/hooks` (Musa), `src/services` (Abdullah).
+If you need a screen changed, ask Musa. If you need a native capability,
+ask Abdullah for the interface.
 
 ## The one hard constraint on your layer
 
@@ -58,7 +58,7 @@ Write `src/domain/schedule/nphcda.ts` exporting a `ScheduleDefinition`
 - Fill in `protectsAgainst` for every dose. It's what makes the detail sheet
   worth reading, and it's two minutes per row while you're already in the source.
 
-> **This table does not merge on your review alone.** Abdullah reads every row
+> **This table does not merge on your review alone.** Musa reads every row
 > against the NPHCDA source before approving. That's not distrust, it's the
 > control we agreed on for the one thing in this app that can cause harm. Put
 > the source link in the PR description so his review is a five-minute job.
@@ -109,7 +109,7 @@ engine shows up as a reviewable diff instead of a silent behaviour change.
 npm run test -- --coverage
 ```
 
-**Done when:** `npm run verify` green, placeholder deleted, Abdullah approved
+**Done when:** `npm run verify` green, placeholder deleted, Musa approved
 the table against source, golden file committed.
 
 ---
@@ -125,7 +125,7 @@ Then implement the real store against
 `src/services/mock/mockStore.ts` already satisfies. Writes go
 **action → repository → SQLite → set state**, never the reverse.
 
-When yours lands, Abdullah changes one import and the mock dies. If his screens
+When yours lands, Musa changes one import and the mock dies. If his screens
 need more than that one-line change, the contract was wrong — we fix the
 contract, not the screens.
 

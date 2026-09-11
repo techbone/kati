@@ -25,7 +25,7 @@ npm start          # then press `i`, or scan the QR with Expo Go for UI-only wor
 ```
 
 > Anything touching RevenueCat needs an **EAS development build**, not Expo Go —
-> `react-native-purchases` is a native module. Musa is distributing dev builds.
+> `react-native-purchases` is a native module. Abdullah is distributing dev builds.
 > You don't need one to start.
 
 **2. Read these three files, in this order** — about fifteen minutes total, and
@@ -42,8 +42,8 @@ it will save you a day:
 | Track | Owner | You own | Your brief |
 |---|---|---|---|
 | **A — Engine** | Faruq ([@Simplyauf](https://github.com/Simplyauf)) | `src/domain`, `src/data`, `src/store` | [TRACK-A.md](docs/tracks/TRACK-A.md) |
-| **B — Surface** | Abdullah ([@abkaaar](https://github.com/abkaaar)) | `src/app`, `src/ui`, `src/hooks` | [TRACK-B.md](docs/tracks/TRACK-B.md) |
-| **C — Platform** | Musa ([@techbone](https://github.com/techbone)) | `src/services`, `app.config.ts`, `eas.json`, `assets` | [TRACK-C.md](docs/tracks/TRACK-C.md) |
+| **B — Surface** | Musa ([@techbone](https://github.com/techbone)) | `src/app`, `src/ui`, `src/hooks` | [TRACK-B.md](docs/tracks/TRACK-B.md) |
+| **C — Platform** | Abdullah ([@abkaaar](https://github.com/abkaaar)) | `src/services`, `app.config.ts`, `eas.json`, `assets` | [TRACK-C.md](docs/tracks/TRACK-C.md) |
 
 ---
 

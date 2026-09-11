@@ -24,14 +24,14 @@ profiles, typed app config.
 
 > ⚠️ The development build is M0 work, not later work. `react-native-purchases`
 > is a native module and does not run in Expo Go. Nobody can see a paywall until
-> this exists. **Musa: start the EAS build today.**
+> this exists. **Abdullah: start the EAS build today.**
 
 ---
 
 ## M1 — Sat 12 – Sun 13 Sep · Engine and skin, in parallel
 
 **A (Faruq) — the schedule, done properly**
-- Source the full routine schedule from NPHCDA. Cite it. **Abdullah reviews every
+- Source the full routine schedule from NPHCDA. Cite it. **Musa reviews every
   row against the source before merge** — two pairs of eyes, no exceptions.
 - `src/domain/schedule/nphcda.ts` as a `ScheduleDefinition`.
 - `computeScheduleItems` / `groupIntoVisits` / `computeSummary`, pure, `today`
@@ -42,14 +42,14 @@ profiles, typed app config.
   today, snapshotted. Any change to the dose table shows up as a reviewable diff.
 - Delete `services/mock/placeholderSchedule.ts`.
 
-**B (Abdullah) — the design system and the first screens**
+**B (Musa) — the design system and the first screens**
 - Theme tokens: colour (light + dark), type scale on Dynamic Type, spacing, radii.
 - Primitives: `Screen`, `Text`, `Button`, `Card`, `Pill`, `EmptyState`, `Sheet`.
 - Onboarding → add child (name, birth date, sex) → home.
 - Home: visit timeline grouped by clinic trip, status pills, next-visit hero.
 - All on `useMockStore`. Verified on iPhone SE and Pro Max widths.
 
-**C (Musa) — the platform**
+**C (Abdullah) — the platform**
 - EAS project init, dev build on all three devices.
 - App Store Connect: app record, bundle ID `com.kati.app`, subscription product,
   **7-day free trial** (the rules require a trial or a judge promo code).

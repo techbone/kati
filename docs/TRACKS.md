@@ -8,14 +8,14 @@ Three people, one repo, nineteen days. The rule that makes this work is simple:
 | Track | Owner | Owns | Never touches |
 |---|---|---|---|
 | **A — Engine** | Faruq | `src/domain/**`, `src/data/**`, `src/store/**` | `src/app`, `src/ui`, `src/services` |
-| **B — Surface** | Abdullah | `src/app/**`, `src/ui/**`, `src/hooks/**` | `src/domain`, `src/data`, `src/services` |
-| **C — Platform** | Musa | `src/services/**`, `app.config.ts`, `eas.json`, `assets/**` | `src/domain`, `src/ui` |
+| **B — Surface** | Musa | `src/app/**`, `src/ui/**`, `src/hooks/**` | `src/domain`, `src/data`, `src/services` |
+| **C — Platform** | Abdullah | `src/services/**`, `app.config.ts`, `eas.json`, `assets/**` | `src/domain`, `src/ui` |
 
 Shared, changed only by agreement: `src/contracts/**`, `package.json`,
 `tsconfig.json`, `eslint.config.js`, `jest.config.js`, `docs/**`.
 
-Musa also owns everything only he can do: EAS builds, App Store Connect,
-RevenueCat dashboard, TestFlight, submission.
+Abdullah also owns everything only he has access to: EAS builds, App Store
+Connect, RevenueCat dashboard, TestFlight, submission.
 
 ## Why the seams hold
 
