@@ -1,0 +1,18 @@
+# Auto-requests review from the track owner whenever their files change.
+# Update the GitHub usernames once everyone has push access.
+
+/src/domain/   @FARUQ_GH_USERNAME
+/src/data/     @FARUQ_GH_USERNAME
+/src/store/    @FARUQ_GH_USERNAME
+
+/src/app/      @ABDULLAH_GH_USERNAME
+/src/ui/       @ABDULLAH_GH_USERNAME
+/src/hooks/    @ABDULLAH_GH_USERNAME
+
+/src/services/ @MUSA_GH_USERNAME
+/app.config.ts @MUSA_GH_USERNAME
+/eas.json      @MUSA_GH_USERNAME
+/assets/       @MUSA_GH_USERNAME
+
+# Frozen seam — every PR touching contracts needs all three eyes.
+/src/contracts/ @FARUQ_GH_USERNAME @ABDULLAH_GH_USERNAME @MUSA_GH_USERNAME

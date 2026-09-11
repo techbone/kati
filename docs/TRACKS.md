@@ -47,6 +47,31 @@ other. Expect two or three across the whole project; be suspicious of the fourth
 - Merge small and often — at minimum once a day. A three-day branch in a
   nineteen-day project is a merge conflict with a countdown on it.
 
+## Everybody PRs, including Musa
+
+`main` is protected: no direct pushes, from anyone. Every change — Musa's
+included — goes through a branch and a PR. This isn't process for its own sake:
+it's the only way to guarantee CI (`.github/workflows/verify.yml`) has actually
+run on a change before it lands, for all three of us equally. Musa's PRs can be
+self-approved and merged the moment CI is green — the point isn't a slower
+review, it's that nothing skips the automated check.
+
+1. Branch, commit, push: `git push -u origin a/schedule-engine`
+2. Open the PR. `CODEOWNERS` auto-requests the right reviewer by path.
+3. CI runs `npm run verify` automatically. Red CI = do not merge, full stop —
+   this is enforced by the branch protection rule, not by asking nicely.
+4. Reviewer for your track (or, for a shared/`contracts` change, all three)
+   approves. Skim > rubber-stamp: an owner reading a PR outside their track
+   still catches "this doesn't match the contract" faster than a demo does.
+5. **Squash merge.** Keeps `main`'s history one commit per feature — easier to
+   `git bisect` or roll back a tag if something breaks four days from now.
+6. Delete the branch after merge. Everyone `git pull` on `main` before
+   branching again for their next piece.
+
+Branch protection on `main` (set up once, in GitHub repo settings):
+require a PR before merging, require the `verify` status check to pass,
+require 1 approving review, dismiss stale approvals on new commits.
+
 ## Integration checkpoints
 
 Every evening, all three merge to `main`, then one person runs `docs/SMOKE.md`
