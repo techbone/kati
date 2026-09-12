@@ -4,25 +4,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
-import { asChildId, asDoseId, asISODate, type ScheduleItem } from '@/contracts';
+import { asChildId, asDoseId, type ScheduleItem } from '@/contracts';
 import { useFontScale } from '@/hooks/useFontScale';
 import { useSchedule } from '@/hooks/useSchedule';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { Button, Icon, Pill, Screen, Text } from '@/ui/components';
-import { formatDate, formatDateLong, formatDueIn, formatOverdue } from '@/ui/format';
-
-function toISO(d: Date) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return asISODate(`${y}-${m}-${day}`);
-}
-
-function startOfToday() {
-  const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
+import { dateToISO, formatDate, formatDateLong, formatDueIn, formatOverdue, startOfToday } from '@/ui/format';
 
 const ROUTE_LABEL = { oral: 'Oral drops', injection: 'Injection', intradermal: 'Injection' } as const;
 
@@ -88,7 +76,7 @@ function DoseDetail({
 
   async function save() {
     setBusy(true);
-    await markGiven(childId, dose.id, toISO(givenDate), note.trim() || undefined);
+    await markGiven(childId, dose.id, dateToISO(givenDate), note.trim() || undefined);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     onClose();
   }
@@ -230,7 +218,7 @@ function DoseDetail({
                 { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.md, paddingHorizontal: theme.space.lg },
               ]}
             >
-              <Text variant="body">{formatDateLong(toISO(givenDate))}</Text>
+              <Text variant="body">{formatDateLong(dateToISO(givenDate))}</Text>
               <DateTimePicker
                 value={givenDate}
                 mode="date"

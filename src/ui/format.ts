@@ -9,7 +9,21 @@ import {
   parseISO,
 } from 'date-fns';
 
-import type { ISODate } from '@/contracts';
+import { asISODate, type ISODate } from '@/contracts';
+
+/** Local calendar date of a Date, as the app's ISODate. Never uses toISOString (UTC). */
+export function dateToISO(d: Date): ISODate {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return asISODate(`${y}-${m}-${day}`);
+}
+
+/** Local midnight today. */
+export function startOfToday(): Date {
+  const d = new Date();
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
 
 /** 'Tue 23 Sep' */
 export function formatDate(iso: ISODate): string {

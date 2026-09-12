@@ -11,3 +11,4 @@ export { NextVisitHero } from './NextVisitHero';
 export { ProgressBar } from './ProgressBar';
 export { VisitCard } from './VisitCard';
 export { Row } from './Row';
+export { RecordCard } from './RecordCard';

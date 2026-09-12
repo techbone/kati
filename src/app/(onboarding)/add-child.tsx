@@ -3,30 +3,18 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
-import { asISODate, type Sex } from '@/contracts';
+import type { Sex } from '@/contracts';
 import { useFontScale } from '@/hooks/useFontScale';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { Button, Icon, Screen, Text } from '@/ui/components';
-import { formatDateLong } from '@/ui/format';
+import { dateToISO, formatDateLong, startOfToday } from '@/ui/format';
 
 const SEX_OPTIONS: { value: Sex; label: string }[] = [
   { value: 'female', label: 'Girl' },
   { value: 'male', label: 'Boy' },
   { value: 'unspecified', label: 'Rather not say' },
 ];
-
-function startOfToday() {
-  const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-function toISO(d: Date) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return asISODate(`${y}-${m}-${day}`);
-}
 
 export default function AddChild() {
   const theme = useTheme();
@@ -47,7 +35,7 @@ export default function AddChild() {
 
   async function save() {
     setSaving(true);
-    const id = await addChild({ name: name.trim(), birthDate: toISO(birthDate), sex });
+    const id = await addChild({ name: name.trim(), birthDate: dateToISO(birthDate), sex });
     // Land on the child just added, whether this is the first or the fourth.
     await setActiveChild(id);
     await setPrefs({ onboarded: true });
@@ -106,7 +94,7 @@ export default function AddChild() {
           />
         </Field>
 
-        <Field label="Date of birth" hint={formatDateLong(toISO(birthDate))}>
+        <Field label="Date of birth" hint={formatDateLong(dateToISO(birthDate))}>
           <View
             style={[
               styles.pickerWrap,
