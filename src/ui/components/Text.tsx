@@ -20,6 +20,8 @@ export interface TextProps extends RNTextProps {
  * lineHeight and letterSpacing together from `fontScale` is deterministic and
  * cannot disagree with itself.
  */
+const HEADING_VARIANTS: ReadonlySet<TypeRoleName> = new Set(['display', 'title', 'heading']);
+
 export function Text({ variant = 'body', color = 'ink', align, style, ...rest }: TextProps) {
   const theme = useTheme();
   const { fontScale } = useWindowDimensions();
@@ -30,6 +32,9 @@ export function Text({ variant = 'body', color = 'ink', align, style, ...rest }:
   return (
     <RNText
       allowFontScaling={false}
+      // Headings announce as headings, so VoiceOver's rotor can jump between
+      // sections. Callers can still override with their own accessibilityRole.
+      accessibilityRole={HEADING_VARIANTS.has(variant) ? 'header' : undefined}
       {...rest}
       style={[
         roleStyle,

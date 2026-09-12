@@ -19,11 +19,7 @@ export function DoseRow({ item, onPress, last = false }: DoseRowProps) {
   const done = status === 'given' || status === 'skipped';
 
   const icon =
-    status === 'given'
-      ? 'checkmark.circle.fill'
-      : status === 'skipped'
-        ? 'minus.circle'
-        : 'circle';
+    status === 'given' ? 'checkmark.circle.fill' : status === 'skipped' ? 'minus.circle' : 'circle';
   const iconColor = status === 'given' ? 'given' : status === 'skipped' ? 'skipped' : 'inkSoft';
 
   const trailing =
@@ -50,7 +46,12 @@ export function DoseRow({ item, onPress, last = false }: DoseRowProps) {
         },
       ]}
     >
-      <Icon name={icon} size={20} color={iconColor} weight={status === 'given' ? 'semibold' : 'regular'} />
+      <Icon
+        name={icon}
+        size={20}
+        color={iconColor}
+        weight={status === 'given' ? 'semibold' : 'regular'}
+      />
       <View style={styles.text}>
         <Text variant="body" color={done ? 'inkMuted' : 'ink'}>
           {dose.shortName}

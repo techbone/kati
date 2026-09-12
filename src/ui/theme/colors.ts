@@ -6,6 +6,10 @@
  * to read "overdue" from the colour before they read the word.
  *
  * Status colours are semantic and never reused for decoration.
+ *
+ * Every text colour clears WCAG AA (4.5:1) on the surface it's used on, in
+ * both schemes. Checked numerically, not by eye — inkSoft in particular was
+ * 2.9:1 before and it's what every caption and disclaimer uses.
  */
 export interface Palette {
   // grounds
@@ -45,21 +49,21 @@ export const light: Palette = {
 
   ink: '#1C1B18',
   inkMuted: '#6B6860',
-  inkSoft: '#9A978E',
+  inkSoft: '#6F6C65',
 
   primary: '#1F5F4A',
   primarySoft: '#DDEDE5',
   onPrimary: '#FFFFFF',
 
-  given: '#2E7D5B',
+  given: '#256B4E',
   givenSoft: '#DCF0E6',
-  due: '#B4620E',
+  due: '#985109',
   dueSoft: '#FBEBD3',
   overdue: '#B83A2E',
   overdueSoft: '#F9E1DD',
   upcoming: '#6B6860',
   upcomingSoft: '#EEEDE8',
-  skipped: '#9A978E',
+  skipped: '#6B6860',
   skippedSoft: '#F0EFEA',
 
   danger: '#B83A2E',
@@ -74,7 +78,7 @@ export const dark: Palette = {
 
   ink: '#F1EFE9',
   inkMuted: '#A8A59B',
-  inkSoft: '#77746B',
+  inkSoft: '#8F8C83',
 
   primary: '#5FBF9A',
   primarySoft: '#183A2E',
@@ -88,7 +92,7 @@ export const dark: Palette = {
   overdueSoft: '#3B1E1A',
   upcoming: '#A8A59B',
   upcomingSoft: '#262622',
-  skipped: '#77746B',
+  skipped: '#8F8C83',
   skippedSoft: '#22221F',
 
   danger: '#EE7A6D',
