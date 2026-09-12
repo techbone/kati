@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
+import { useFontScale } from '@/hooks/useFontScale';
 import { useTheme } from '@/hooks/useTheme';
 import { Button, Icon, Screen, Text } from '@/ui/components';
 
@@ -25,10 +26,15 @@ const POINTS: { icon: string; title: string; body: string }[] = [
 export default function Welcome() {
   const theme = useTheme();
   const router = useRouter();
+  // Icons are fixed-size chrome next to text that grows with Dynamic Type —
+  // without this they go from "matching" to "shrunken" as text scales up.
+  // Capped well short of the text's own ceiling: they should track the text,
+  // not dominate the row at the largest accessibility sizes.
+  const iconScale = useFontScale(1.3);
 
   return (
     <Screen contentStyle={styles.content}>
-      <View style={{ gap: theme.space.md }}>
+      <View style={{ gap: theme.space.lg }}>
         <Text variant="label" color="primary">
           Kati
         </Text>
@@ -44,10 +50,15 @@ export default function Welcome() {
             <View
               style={[
                 styles.pointIcon,
-                { backgroundColor: theme.colors.primarySoft, borderRadius: theme.radius.md },
+                {
+                  width: 40 * iconScale,
+                  height: 40 * iconScale,
+                  backgroundColor: theme.colors.primarySoft,
+                  borderRadius: theme.radius.md,
+                },
               ]}
             >
-              <Icon name={p.icon} size={20} color="primary" />
+              <Icon name={p.icon} size={20 * iconScale} color="primary" />
             </View>
             <View style={[styles.pointText, { gap: 2 }]}>
               <Text variant="bodyStrong">{p.title}</Text>
