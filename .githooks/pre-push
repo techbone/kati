@@ -1,0 +1,16 @@
+#!/bin/sh
+# Runs before every push. Refuses to push a red branch.
+#
+# Installed automatically by `npm install` (see the "prepare" script), so it
+# is on every teammate's machine without anyone remembering to set it up.
+# This stands in for CI while GitHub Actions isn't available on the repo.
+#
+# Emergency bypass (you'd better have a reason): git push --no-verify
+
+echo "pre-push: running npm run verify (typecheck + lint + test)…"
+if ! npm run --silent verify; then
+  echo ""
+  echo "✖ verify failed — push refused. Fix it, or 'git push --no-verify' if you know what you're doing."
+  exit 1
+fi
+echo "✓ verify green — pushing."
