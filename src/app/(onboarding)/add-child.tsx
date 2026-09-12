@@ -15,6 +15,11 @@ const SEX_OPTIONS: { value: Sex; label: string }[] = [
   { value: 'unspecified', label: 'Rather not say' },
 ];
 
+function startOfToday() {
+  const d = new Date();
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 function toISO(d: Date) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -29,14 +34,15 @@ export default function AddChild() {
   const setPrefs = useAppStore((s) => s.setPrefs);
 
   const [name, setName] = useState('');
-  const [birthDate, setBirthDate] = useState<Date | null>(null);
+  // Defaults to today: a child born today is a real case, and the picker only
+  // fires onChange when the wheel moves, so a null default left Save disabled.
+  const [birthDate, setBirthDate] = useState<Date>(startOfToday);
   const [sex, setSex] = useState<Sex>('unspecified');
   const [saving, setSaving] = useState(false);
 
-  const canSave = name.trim().length > 0 && birthDate !== null && !saving;
+  const canSave = name.trim().length > 0 && !saving;
 
   async function save() {
-    if (!birthDate) return;
     setSaving(true);
     await addChild({ name: name.trim(), birthDate: toISO(birthDate), sex });
     await setPrefs({ onboarded: true });
@@ -93,7 +99,7 @@ export default function AddChild() {
           />
         </Field>
 
-        <Field label="Date of birth" hint={birthDate ? formatDateLong(toISO(birthDate)) : undefined}>
+        <Field label="Date of birth" hint={formatDateLong(toISO(birthDate))}>
           <View
             style={[
               styles.pickerWrap,
@@ -105,7 +111,7 @@ export default function AddChild() {
             ]}
           >
             <DateTimePicker
-              value={birthDate ?? new Date()}
+              value={birthDate}
               mode="date"
               display="spinner"
               maximumDate={new Date()}
@@ -114,11 +120,6 @@ export default function AddChild() {
               style={styles.picker}
             />
           </View>
-          {!birthDate ? (
-            <Text variant="caption" color="inkSoft">
-              Scroll to set the date.
-            </Text>
-          ) : null}
         </Field>
 
         <Field label="Sex">
