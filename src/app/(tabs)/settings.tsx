@@ -4,6 +4,7 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { Alert, Pressable, StyleSheet, Switch, View } from 'react-native';
 
+import { usePurchases } from '@/hooks/usePurchases';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
@@ -38,6 +39,7 @@ export default function SettingsTab() {
   const refreshReminders = useAppStore((s) => s.refreshReminders);
   const children = useAppStore((s) => s.children);
   const isPremium = useAppStore((s) => s.isPremium);
+  const { restore, purchasing } = usePurchases();
   const { reminders } = prefs;
 
   async function updateReminders(patch: Partial<typeof reminders>) {
@@ -56,9 +58,14 @@ export default function SettingsTab() {
     updateReminders({ leadDays: next });
   }
 
-  function restore() {
-    // M4: PurchaseService.restore(). Stubbed so the entry point exists in the UI now.
-    Alert.alert('Restore purchases', 'Purchases arrive in a later build. Nothing to restore yet.');
+  async function onRestore() {
+    const restored = await restore();
+    Alert.alert(
+      restored ? 'Restored' : 'Nothing to restore',
+      restored
+        ? 'Kati Plus is active on this device.'
+        : 'No previous Kati Plus purchase was found on this account.',
+    );
   }
 
   const version = Constants.expoConfig?.version ?? '—';
@@ -93,7 +100,9 @@ export default function SettingsTab() {
                     mode="time"
                     display="compact"
                     minuteInterval={5}
-                    onChange={(_, d) => d && updateReminders({ hour: d.getHours(), minute: d.getMinutes() })}
+                    onChange={(_, d) =>
+                      d && updateReminders({ hour: d.getHours(), minute: d.getMinutes() })
+                    }
                     themeVariant={theme.scheme}
                     accentColor={theme.colors.primary}
                     accessibilityLabel={`Reminder time, ${formatTime(reminders.hour, reminders.minute)}`}
@@ -117,13 +126,19 @@ export default function SettingsTab() {
                         style={[
                           styles.chip,
                           {
-                            backgroundColor: on ? theme.colors.primarySoft : theme.colors.surfaceMuted,
+                            backgroundColor: on
+                              ? theme.colors.primarySoft
+                              : theme.colors.surfaceMuted,
                             borderColor: on ? theme.colors.primary : 'transparent',
                             borderRadius: theme.radius.pill,
                           },
                         ]}
                       >
-                        <Text variant="callout" color={on ? 'primary' : 'inkMuted'} style={styles.chipText}>
+                        <Text
+                          variant="callout"
+                          color={on ? 'primary' : 'inkMuted'}
+                          style={styles.chipText}
+                        >
                           {o.label}
                         </Text>
                       </Pressable>
@@ -146,7 +161,12 @@ export default function SettingsTab() {
               right={<Avatar name={c.name} size={32} />}
             />
           ))}
-          <Row label="Add or switch child" icon="person.2.fill" onPress={() => router.push('/children')} divider={false} />
+          <Row
+            label="Add or switch child"
+            icon="person.2.fill"
+            onPress={() => router.push('/children')}
+            divider={false}
+          />
         </Card>
       </Section>
 
@@ -161,7 +181,18 @@ export default function SettingsTab() {
             }
             icon={isPremium ? 'checkmark.seal.fill' : 'star'}
           />
-          <Row label="Restore purchases" onPress={restore} divider={false} />
+          <Row
+            label="Restore purchases"
+            onPress={onRestore}
+            divider={false}
+            right={
+              purchasing === 'restore' ? (
+                <Text variant="caption" color="inkSoft">
+                  Checking…
+                </Text>
+              ) : undefined
+            }
+          />
         </Card>
       </Section>
 

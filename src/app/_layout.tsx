@@ -66,6 +66,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="children" options={sheet([0.55, 1])} />
         <Stack.Screen name="dose" options={sheet([0.8, 1])} />
+        <Stack.Screen name="paywall" options={sheet([0.85, 1])} />
       </Stack>
     </ThemeProvider>
   );

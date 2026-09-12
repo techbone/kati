@@ -1,6 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { ChildId } from '@/contracts';
 import { usePremium } from '@/hooks/usePremium';
@@ -28,12 +28,7 @@ export default function ChildrenModal() {
 
   function add() {
     if (!allows('multiple-children')) {
-      // M4: this becomes router.push('/paywall'). The gate lives here so that
-      // change is one line.
-      Alert.alert(
-        'Kati Plus',
-        'Tracking more than one child is part of Kati Plus. The upgrade arrives in a later build.',
-      );
+      router.push({ pathname: '/paywall', params: { reason: 'multiple-children' } });
       return;
     }
     router.push('/(onboarding)/add-child');
