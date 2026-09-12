@@ -1,17 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Redirect } from 'expo-router';
 
-/** Placeholder. Track B replaces this with the boot/redirect gate in M2. */
+import { useAppStore } from '@/hooks/useStore';
+
+/** Boot gate: straight to the schedule if a child exists, otherwise onboarding. */
 export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Kati</Text>
-      <Text style={styles.subtitle}>Scaffold ready — M0</Text>
-    </View>
-  );
-}
+  const onboarded = useAppStore((s) => s.prefs.onboarded);
+  const hasChild = useAppStore((s) => s.children.length > 0);
 
-const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  title: { fontSize: 32, fontWeight: '700' },
-  subtitle: { fontSize: 15, opacity: 0.6 },
-});
+  return <Redirect href={onboarded && hasChild ? '/(tabs)' : '/(onboarding)'} />;
+}

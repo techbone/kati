@@ -1,0 +1,166 @@
+import { StyleSheet, View } from 'react-native';
+
+import type { Child, ScheduleSummary, ScheduleVisit } from '@/contracts';
+import { useTheme } from '@/hooks/useTheme';
+import { Icon } from '@/ui/components/Icon';
+import { Text } from '@/ui/components/Text';
+import { dateToISO, formatDate, formatDateLong } from '@/ui/format';
+
+interface RecordCardProps {
+  child: Child;
+  visits: ScheduleVisit[];
+  summary: ScheduleSummary;
+  scheduleSource: string;
+  today: Date;
+}
+
+const SEX_LABEL = { female: 'Female', male: 'Male', unspecified: '—' } as const;
+
+/**
+ * The paper child health card, as a document. Dense, ruled, tabular — built
+ * to be read by a nurse in a queue, and to be the screenshot in the listing.
+ * Layout mirrors the printed card: header block, then one ruled row per dose,
+ * grouped under a visit heading.
+ */
+export function RecordCard({ child, visits, summary, scheduleSource, today }: RecordCardProps) {
+  const theme = useTheme();
+  const c = theme.colors;
+
+  return (
+    <View
+      accessibilityLabel={`Immunization record for ${child.name}`}
+      style={[
+        styles.sheet,
+        { backgroundColor: c.surface, borderColor: c.line, borderRadius: theme.radius.md },
+      ]}
+    >
+      {/* Header block */}
+      <View style={[styles.header, { padding: theme.space.lg, gap: theme.space.md, borderBottomColor: c.ink }]}>
+        <View style={styles.headerTop}>
+          <View style={{ gap: 2 }}>
+            <Text variant="label" color="inkMuted">
+              Immunization record
+            </Text>
+            <Text variant="title">{child.name}</Text>
+          </View>
+          <View style={[styles.stamp, { borderColor: c.primary, borderRadius: theme.radius.sm }]}>
+            <Text variant="label" color="primary">
+              {summary.givenCount}/{summary.totalDoses}
+            </Text>
+          </View>
+        </View>
+        <View style={[styles.meta, { gap: theme.space.lg }]}>
+          <Meta label="Date of birth" value={formatDateLong(child.birthDate)} />
+          <Meta label="Sex" value={SEX_LABEL[child.sex]} />
+        </View>
+      </View>
+
+      {/* Column headings */}
+      <View style={[styles.row, styles.headRow, { paddingHorizontal: theme.space.lg, borderBottomColor: c.line }]}>
+        <Text variant="label" color="inkSoft" style={styles.colVaccine}>
+          Vaccine
+        </Text>
+        <Text variant="label" color="inkSoft" style={styles.colDate}>
+          Due
+        </Text>
+        <Text variant="label" color="inkSoft" style={styles.colDate}>
+          Given
+        </Text>
+      </View>
+
+      {visits.map((visit) => (
+        <View key={visit.visitId}>
+          <View style={[styles.visitRow, { backgroundColor: c.surfaceMuted, paddingHorizontal: theme.space.lg }]}>
+            <Text variant="caption" color="inkMuted" style={styles.visitLabel}>
+              {visit.visitLabel}
+            </Text>
+          </View>
+          {visit.items.map((item, i) => {
+            const given = item.status === 'given';
+            const skipped = item.status === 'skipped';
+            const overdue = item.status === 'overdue';
+            return (
+              <View
+                key={item.dose.id}
+                style={[
+                  styles.row,
+                  {
+                    paddingHorizontal: theme.space.lg,
+                    borderBottomColor: c.line,
+                    borderBottomWidth: i === visit.items.length - 1 ? 0 : StyleSheet.hairlineWidth,
+                  },
+                ]}
+              >
+                <View style={styles.colVaccine}>
+                  <Text variant="callout">{item.dose.shortName}</Text>
+                  <Text variant="caption" color="inkSoft">
+                    {item.dose.doseLabel}
+                  </Text>
+                </View>
+                <Text variant="callout" color={overdue ? 'overdue' : 'inkMuted'} style={[styles.colDate, styles.tabular]}>
+                  {formatDate(item.dueDate)}
+                </Text>
+                <View style={[styles.colDate, styles.givenCell]}>
+                  {given && item.record?.givenDate ? (
+                    <>
+                      <Icon name="checkmark" size={11} color="given" weight="bold" />
+                      <Text variant="callout" color="given" style={styles.tabular}>
+                        {formatDate(item.record.givenDate)}
+                      </Text>
+                    </>
+                  ) : skipped ? (
+                    <Text variant="callout" color="inkSoft">
+                      Skipped
+                    </Text>
+                  ) : (
+                    <Text variant="callout" color="inkSoft">
+                      —
+                    </Text>
+                  )}
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      ))}
+
+      <View style={[styles.footer, { padding: theme.space.lg, borderTopColor: c.line, gap: 2 }]}>
+        <Text variant="caption" color="inkSoft">
+          {scheduleSource}
+        </Text>
+        <Text variant="caption" color="inkSoft">
+          Generated {formatDateLong(dateToISO(today))} · Kati · Record-keeping aid, not medical advice
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function Meta({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={{ gap: 1 }}>
+      <Text variant="label" color="inkSoft">
+        {label}
+      </Text>
+      <Text variant="callout">{value}</Text>
+    </View>
+  );
+}
+
+
+const styles = StyleSheet.create({
+  sheet: { borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
+  header: { borderBottomWidth: 2 },
+  headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 },
+  stamp: { borderWidth: 1.5, paddingHorizontal: 8, paddingVertical: 4, alignSelf: 'flex-start' },
+  meta: { flexDirection: 'row', flexWrap: 'wrap' },
+  row: { flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingVertical: 8, gap: 8 },
+  headRow: { minHeight: 32, paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth },
+  visitRow: { paddingVertical: 4 },
+  visitLabel: { fontWeight: '600' },
+  colVaccine: { flex: 1 },
+  colDate: { width: 92 },
+  givenCell: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  tabular: { fontVariant: ['tabular-nums'] },
+  footer: { borderTopWidth: StyleSheet.hairlineWidth },
+});
