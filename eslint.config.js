@@ -36,7 +36,7 @@ module.exports = defineConfig([
   },
 
   {
-    files: ['src/app/**/*.tsx', 'src/app/**/*.ts', 'src/ui/**/*.tsx', 'src/ui/**/*.ts'],
+    files: ['src/app/**/*.tsx', 'src/app/**/*.ts', 'src/ui/**/*.tsx', 'src/ui/**/*.ts', 'src/hooks/**/*.ts', 'src/hooks/**/*.tsx'],
     rules: {
       'no-restricted-imports': [
         'error',
