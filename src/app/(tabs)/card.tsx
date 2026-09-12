@@ -1,5 +1,5 @@
-import { Alert, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import { useActiveChild } from '@/hooks/useActiveChild';
 import { usePremium } from '@/hooks/usePremium';
@@ -34,10 +34,10 @@ export default function CardTab() {
 
   function share() {
     if (!allows('pdf-export')) {
-      // M4: router.push('/paywall'). M3: Track C's ExportService.sharePdf().
-      Alert.alert('Kati Plus', 'Sharing the record as a PDF is part of Kati Plus.');
+      router.push({ pathname: '/paywall', params: { reason: 'pdf-export' } });
       return;
     }
+    // M3: Track C's ExportService.sharePdf().
     Alert.alert('Export', 'PDF export arrives with the next milestone.');
   }
 
@@ -63,5 +63,11 @@ export default function CardTab() {
 }
 
 const styles = StyleSheet.create({
-  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
 });

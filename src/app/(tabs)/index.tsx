@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { ScheduleItem } from '@/contracts';
 import { useActiveChild } from '@/hooks/useActiveChild';
+import { useFontScale } from '@/hooks/useFontScale';
 import { useSchedule } from '@/hooks/useSchedule';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
@@ -25,6 +26,7 @@ export default function Home() {
   const today = useToday();
   const child = useActiveChild();
   const schedule = useSchedule(child?.id ?? null);
+  const chrome = useFontScale(1.3);
 
   if (!child || !schedule) {
     return (
@@ -54,7 +56,10 @@ export default function Home() {
         accessibilityRole="button"
         accessibilityLabel={`${child.name}, ${formatAge(child.birthDate, today)}. Switch or add a child`}
         onPress={() => router.push('/children')}
-        style={({ pressed }) => [styles.header, { gap: theme.space.md, opacity: pressed ? 0.7 : 1 }]}
+        style={({ pressed }) => [
+          styles.header,
+          { gap: theme.space.md, opacity: pressed ? 0.7 : 1 },
+        ]}
       >
         <Avatar name={child.name} size={48} />
         <View style={styles.headerText}>
@@ -66,7 +71,12 @@ export default function Home() {
         <View
           style={[
             styles.switchBtn,
-            { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill },
+            {
+              width: 36 * chrome,
+              height: 36 * chrome,
+              backgroundColor: theme.colors.surfaceMuted,
+              borderRadius: theme.radius.pill,
+            },
           ]}
         >
           <Icon name="person.2.fill" size={16} color="inkMuted" />
@@ -79,7 +89,11 @@ export default function Home() {
         <View
           style={[
             styles.doneBanner,
-            { backgroundColor: theme.colors.givenSoft, borderRadius: theme.radius.xl, padding: theme.space.xl },
+            {
+              backgroundColor: theme.colors.givenSoft,
+              borderRadius: theme.radius.xl,
+              padding: theme.space.xl,
+            },
           ]}
         >
           <Text variant="title" color="given">
@@ -128,9 +142,15 @@ export default function Home() {
 const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center' },
   headerText: { flex: 1 },
-  switchBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  switchBtn: { alignItems: 'center', justifyContent: 'center' },
   doneBanner: { gap: 4 },
-  progressRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 8 },
+  progressRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
   strong: { fontWeight: '600' },
   footer: { paddingTop: 8 },
 });
