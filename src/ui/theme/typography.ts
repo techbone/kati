@@ -34,14 +34,14 @@ export const type = {
   display: {
     fontFamily: fontFamily.display,
     fontSize: 34,
-    lineHeight: 38,
+    lineHeight: 41,
     letterSpacing: -0.4,
     maxScale: 1.3,
   },
   title: {
     fontFamily: fontFamily.display,
     fontSize: 26,
-    lineHeight: 30,
+    lineHeight: 32,
     letterSpacing: -0.2,
     maxScale: 1.4,
   },

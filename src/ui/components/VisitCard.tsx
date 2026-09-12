@@ -70,6 +70,6 @@ export function VisitCard({ visit, onPressDose }: VisitCardProps) {
 }
 
 const styles = StyleSheet.create({
-  head: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' },
+  head: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap' },
   headText: { flex: 1, gap: 2 },
 });

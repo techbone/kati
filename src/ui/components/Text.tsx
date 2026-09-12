@@ -1,7 +1,7 @@
-import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
+import { Text as RNText, type TextProps as RNTextProps, useWindowDimensions } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
-import type { Palette, TypeRoleName } from '@/ui/theme';
+import type { Palette, TypeRole, TypeRoleName } from '@/ui/theme';
 
 export interface TextProps extends RNTextProps {
   variant?: TypeRoleName;
@@ -11,19 +11,37 @@ export interface TextProps extends RNTextProps {
 }
 
 /**
- * The only way text is rendered in Kati. Picks a type role, a palette colour,
- * and the Dynamic Type ceiling for that role so nothing has to remember it.
+ * The only way text is rendered in Kati.
+ *
+ * Dynamic Type is applied here by hand rather than through RN's
+ * `allowFontScaling` + `maxFontSizeMultiplier`, because on this RN version the
+ * pair measures the line box at the capped size but draws the glyphs at the
+ * device size — text clips at accessibility sizes. Scaling fontSize,
+ * lineHeight and letterSpacing together from `fontScale` is deterministic and
+ * cannot disagree with itself.
  */
 export function Text({ variant = 'body', color = 'ink', align, style, ...rest }: TextProps) {
   const theme = useTheme();
-  const { maxScale, ...roleStyle } = theme.type[variant];
+  const { fontScale } = useWindowDimensions();
+  const { maxScale, fontSize, lineHeight, letterSpacing, ...roleStyle }: TypeRole =
+    theme.type[variant];
+  const k = Math.min(fontScale, maxScale);
 
   return (
     <RNText
-      maxFontSizeMultiplier={maxScale}
+      allowFontScaling={false}
       {...rest}
-      style={[roleStyle, { color: theme.colors[color] }, align && { textAlign: align }, style]}
+      style={[
+        roleStyle,
+        {
+          fontSize: fontSize * k,
+          lineHeight: lineHeight * k,
+          letterSpacing: (letterSpacing ?? 0) * k,
+          color: theme.colors[color],
+        },
+        align && { textAlign: align },
+        style,
+      ]}
     />
   );
 }
-

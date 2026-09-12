@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { asISODate, type Sex } from '@/contracts';
+import { useFontScale } from '@/hooks/useFontScale';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { Button, Icon, Screen, Text } from '@/ui/components';
@@ -30,7 +31,9 @@ function toISO(d: Date) {
 export default function AddChild() {
   const theme = useTheme();
   const router = useRouter();
+  const k = useFontScale(1.6);
   const addChild = useAppStore((s) => s.addChild);
+  const setActiveChild = useAppStore((s) => s.setActiveChild);
   const setPrefs = useAppStore((s) => s.setPrefs);
 
   const [name, setName] = useState('');
@@ -44,7 +47,9 @@ export default function AddChild() {
 
   async function save() {
     setSaving(true);
-    await addChild({ name: name.trim(), birthDate: toISO(birthDate), sex });
+    const id = await addChild({ name: name.trim(), birthDate: toISO(birthDate), sex });
+    // Land on the child just added, whether this is the first or the fourth.
+    await setActiveChild(id);
     await setPrefs({ onboarded: true });
     router.replace('/(tabs)');
   }
@@ -85,10 +90,12 @@ export default function AddChild() {
             autoCapitalize="words"
             autoCorrect={false}
             returnKeyType="done"
-            maxFontSizeMultiplier={1.6}
+            allowFontScaling={false}
             style={[
               styles.input,
               {
+                fontSize: 17 * k,
+                minHeight: 50 * k,
                 color: theme.colors.ink,
                 backgroundColor: theme.colors.surface,
                 borderColor: theme.colors.line,
@@ -186,7 +193,7 @@ function Field({
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   back: { flexDirection: 'row', alignItems: 'center', gap: 2, alignSelf: 'flex-start' },
-  input: { minHeight: 50, fontSize: 17, borderWidth: StyleSheet.hairlineWidth },
+  input: { borderWidth: StyleSheet.hairlineWidth },
   pickerWrap: { borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
   picker: { height: 180, alignSelf: 'stretch' },
   segment: { flexDirection: 'row', flexWrap: 'wrap' },

@@ -1,6 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { ScheduleItem } from '@/contracts';
 import { useActiveChild } from '@/hooks/useActiveChild';
@@ -10,6 +10,7 @@ import { useToday } from '@/hooks/useToday';
 import {
   Avatar,
   EmptyState,
+  Icon,
   NextVisitHero,
   ProgressBar,
   Screen,
@@ -48,7 +49,12 @@ export default function Home() {
 
   return (
     <Screen contentStyle={{ gap: theme.space.xl }}>
-      <View style={[styles.header, { gap: theme.space.md }]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${child.name}, ${formatAge(child.birthDate, today)}. Switch or add a child`}
+        onPress={() => router.push('/modals/children')}
+        style={({ pressed }) => [styles.header, { gap: theme.space.md, opacity: pressed ? 0.7 : 1 }]}
+      >
         <Avatar name={child.name} size={48} />
         <View style={styles.headerText}>
           <Text variant="title">{child.name}</Text>
@@ -56,7 +62,15 @@ export default function Home() {
             {formatAge(child.birthDate, today)}
           </Text>
         </View>
-      </View>
+        <View
+          style={[
+            styles.switchBtn,
+            { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill },
+          ]}
+        >
+          <Icon name="person.2.fill" size={16} color="inkMuted" />
+        </View>
+      </Pressable>
 
       {summary.nextVisit ? (
         <NextVisitHero visit={summary.nextVisit} />
@@ -113,8 +127,9 @@ export default function Home() {
 const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center' },
   headerText: { flex: 1 },
+  switchBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
   doneBanner: { gap: 4 },
-  progressRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
+  progressRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 8 },
   strong: { fontWeight: '600' },
   footer: { paddingTop: 8 },
 });

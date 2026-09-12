@@ -63,5 +63,5 @@ export function NextVisitHero({ visit }: NextVisitHeroProps) {
 const styles = StyleSheet.create({
   root: {},
   row: { flexDirection: 'row', alignItems: 'center' },
-  between: { justifyContent: 'space-between' },
+  between: { justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 },
 });
