@@ -3,7 +3,7 @@ import { EmptyState, Screen } from '@/ui/components';
 /** M2: reminders, child management, restore purchases. Placeholder until then. */
 export default function SettingsTab() {
   return (
-    <Screen scroll={false}>
+    <Screen>
       <EmptyState
         icon="gearshape.fill"
         title="Settings"

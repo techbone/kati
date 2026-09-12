@@ -28,7 +28,7 @@ export default function Home() {
 
   if (!child || !schedule) {
     return (
-      <Screen scroll={false}>
+      <Screen>
         <EmptyState
           icon="person.crop.circle.badge.plus"
           title="No child yet"

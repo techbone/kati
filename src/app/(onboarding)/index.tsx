@@ -27,7 +27,7 @@ export default function Welcome() {
   const router = useRouter();
 
   return (
-    <Screen scroll={false} contentStyle={styles.content}>
+    <Screen contentStyle={styles.content}>
       <View style={{ gap: theme.space.md }}>
         <Text variant="label" color="primary">
           Kati

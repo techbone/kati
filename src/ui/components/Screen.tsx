@@ -43,7 +43,11 @@ export function Screen({
   return (
     <ScrollView
       style={[styles.root, { backgroundColor: theme.colors.bg }]}
-      contentContainerStyle={[padding, contentStyle]}
+      // flexGrow (not flex) on the content container: it fills the viewport
+      // when content is short — so a `justifyContent: 'space-between'` layout
+      // still spreads edge to edge — and simply grows past it when content is
+      // taller, e.g. at large Dynamic Type sizes, instead of clipping.
+      contentContainerStyle={[styles.grow, padding, contentStyle]}
       contentInsetAdjustmentBehavior="never"
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
@@ -55,5 +59,5 @@ export function Screen({
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  grow: { flex: 1 },
+  grow: { flexGrow: 1 },
 });

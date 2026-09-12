@@ -3,7 +3,7 @@ import { EmptyState, Screen } from '@/ui/components';
 /** M3: the clinic-showable record. Placeholder until then. */
 export default function CardTab() {
   return (
-    <Screen scroll={false}>
+    <Screen>
       <EmptyState
         icon="doc.text.fill"
         title="Immunization card"
