@@ -2,17 +2,28 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 
 import { asChildId, asDoseId, type ScheduleItem } from '@/contracts';
 import { useFontScale } from '@/hooks/useFontScale';
 import { useSchedule } from '@/hooks/useSchedule';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
-import { Button, Icon, Pill, Screen, Text } from '@/ui/components';
-import { dateToISO, formatDate, formatDateLong, formatDueIn, formatOverdue, startOfToday } from '@/ui/format';
+import { Button, CloseButton, Icon, Pill, Screen, Text } from '@/ui/components';
+import {
+  dateToISO,
+  formatDate,
+  formatDateLong,
+  formatDueIn,
+  formatOverdue,
+  startOfToday,
+} from '@/ui/format';
 
-const ROUTE_LABEL = { oral: 'Oral drops', injection: 'Injection', intradermal: 'Injection' } as const;
+const ROUTE_LABEL = {
+  oral: 'Oral drops',
+  injection: 'Injection',
+  intradermal: 'Injection',
+} as const;
 
 /**
  * One dose. The second thing the demo shows: tap → mark given → the card
@@ -120,21 +131,17 @@ function DoseDetail({
             {dose.vaccineName} · {ROUTE_LABEL[dose.route]}
           </Text>
         </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Close"
-          hitSlop={12}
-          onPress={onClose}
-          style={[styles.close, { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill }]}
-        >
-          <Icon name="xmark" size={14} color="inkMuted" weight="bold" />
-        </Pressable>
+        <CloseButton onPress={onClose} />
       </View>
 
       <View style={[styles.statusRow, { gap: theme.space.md }]}>
         <Pill status={status} label={status === 'overdue' ? dueLine : undefined} />
         <Text variant="callout" color="inkMuted">
-          {status === 'overdue' ? `Due ${formatDate(item.dueDate)}` : status === 'given' || status === 'skipped' ? `Was due ${dueLine}` : `Due ${formatDate(item.dueDate)} · ${dueLine}`}
+          {status === 'overdue'
+            ? `Due ${formatDate(item.dueDate)}`
+            : status === 'given' || status === 'skipped'
+              ? `Was due ${dueLine}`
+              : `Due ${formatDate(item.dueDate)} · ${dueLine}`}
         </Text>
       </View>
 
@@ -171,7 +178,8 @@ function DoseDetail({
           style={[
             styles.recordCard,
             {
-              backgroundColor: status === 'given' ? theme.colors.givenSoft : theme.colors.skippedSoft,
+              backgroundColor:
+                status === 'given' ? theme.colors.givenSoft : theme.colors.skippedSoft,
               borderRadius: theme.radius.lg,
               padding: theme.space.lg,
               gap: theme.space.md,
@@ -198,9 +206,20 @@ function DoseDetail({
           ) : null}
           <View style={[styles.actions, { gap: theme.space.sm }]}>
             {status === 'given' ? (
-              <Button label="Change" variant="secondary" icon="pencil" onPress={() => setEditing(true)} />
+              <Button
+                label="Change"
+                variant="secondary"
+                icon="pencil"
+                onPress={() => setEditing(true)}
+              />
             ) : null}
-            <Button label="Undo" variant="ghost" icon="arrow.uturn.backward" onPress={undo} disabled={busy} />
+            <Button
+              label="Undo"
+              variant="ghost"
+              icon="arrow.uturn.backward"
+              onPress={undo}
+              disabled={busy}
+            />
           </View>
         </View>
       ) : null}
@@ -215,7 +234,11 @@ function DoseDetail({
             <View
               style={[
                 styles.dateRow,
-                { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.md, paddingHorizontal: theme.space.lg },
+                {
+                  backgroundColor: theme.colors.surfaceMuted,
+                  borderRadius: theme.radius.md,
+                  paddingHorizontal: theme.space.lg,
+                },
               ]}
             >
               <Text variant="body">{formatDateLong(dateToISO(givenDate))}</Text>
@@ -233,7 +256,10 @@ function DoseDetail({
 
           <View style={{ gap: theme.space.sm }}>
             <Text variant="label" color="inkMuted">
-              Note <Text variant="label" color="inkSoft">(optional)</Text>
+              Note{' '}
+              <Text variant="label" color="inkSoft">
+                (optional)
+              </Text>
             </Text>
             <TextInput
               id="dose-note"
@@ -270,11 +296,15 @@ function DoseDetail({
 const styles = StyleSheet.create({
   titleRow: { flexDirection: 'row', alignItems: 'flex-start' },
   titleText: { flex: 1 },
-  close: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
   statusRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
   chips: { flexDirection: 'row', flexWrap: 'wrap' },
   chip: { paddingHorizontal: 12, paddingVertical: 6 },
   recordCard: {},
   actions: { flexDirection: 'row', flexWrap: 'wrap' },
-  dateRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48 },
+  dateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 48,
+  },
 });

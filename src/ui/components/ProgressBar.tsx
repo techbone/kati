@@ -16,12 +16,19 @@ export function ProgressBar({ value, accessibilityLabel }: ProgressBarProps) {
       accessibilityRole="progressbar"
       accessibilityLabel={accessibilityLabel}
       accessibilityValue={{ min: 0, max: 100, now: Math.round(pct) }}
-      style={[styles.track, { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill }]}
+      style={[
+        styles.track,
+        { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill },
+      ]}
     >
       <View
         style={[
           styles.fill,
-          { width: `${pct}%`, backgroundColor: theme.colors.given, borderRadius: theme.radius.pill },
+          {
+            width: `${pct}%`,
+            backgroundColor: theme.colors.given,
+            borderRadius: theme.radius.pill,
+          },
         ]}
       />
     </View>

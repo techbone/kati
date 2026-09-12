@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/ui/components/Button';
-import { Icon } from '@/ui/components/Icon';
+import { IconBadge } from '@/ui/components/IconBadge';
 import { Text } from '@/ui/components/Text';
 
 interface EmptyStateProps {
@@ -16,14 +16,7 @@ export function EmptyState({ icon, title, body, action }: EmptyStateProps) {
   const theme = useTheme();
   return (
     <View style={[styles.root, { gap: theme.space.md, paddingVertical: theme.space.xxxl }]}>
-      <View
-        style={[
-          styles.iconWrap,
-          { backgroundColor: theme.colors.primarySoft, borderRadius: theme.radius.pill },
-        ]}
-      >
-        <Icon name={icon} size={30} color="primary" />
-      </View>
+      <IconBadge name={icon} size={72} round />
       <Text variant="heading" align="center">
         {title}
       </Text>
@@ -39,7 +32,6 @@ export function EmptyState({ icon, title, body, action }: EmptyStateProps) {
 
 const styles = StyleSheet.create({
   root: { alignItems: 'center' },
-  iconWrap: { width: 72, height: 72, alignItems: 'center', justifyContent: 'center' },
   body: { maxWidth: 300 },
   action: { marginTop: 8 },
 });

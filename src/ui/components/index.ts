@@ -12,3 +12,5 @@ export { ProgressBar } from './ProgressBar';
 export { VisitCard } from './VisitCard';
 export { Row } from './Row';
 export { RecordCard } from './RecordCard';
+export { CloseButton } from './CloseButton';
+export { IconBadge } from './IconBadge';

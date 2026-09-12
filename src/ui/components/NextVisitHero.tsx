@@ -19,7 +19,11 @@ export function NextVisitHero({ visit }: NextVisitHeroProps) {
   const late = visit.status === 'overdue';
   const soon = visit.status === 'due';
 
-  const bg = late ? theme.colors.overdueSoft : soon ? theme.colors.dueSoft : theme.colors.primarySoft;
+  const bg = late
+    ? theme.colors.overdueSoft
+    : soon
+      ? theme.colors.dueSoft
+      : theme.colors.primarySoft;
   const accent = late ? 'overdue' : soon ? 'due' : 'primary';
   const eyebrow = late ? 'Overdue clinic visit' : soon ? 'Clinic visit due' : 'Next clinic visit';
   const when = late ? formatOverdue(visit.daysUntilDue) : formatDueIn(visit.daysUntilDue);
@@ -31,11 +35,21 @@ export function NextVisitHero({ visit }: NextVisitHeroProps) {
       accessibilityLabel={`${eyebrow}: ${visit.visitLabel}, ${formatDate(visit.dueDate)}, ${when}, ${pluralDoses(pending)}`}
       style={[
         styles.root,
-        { backgroundColor: bg, borderRadius: theme.radius.xl, padding: theme.space.xl, gap: theme.space.lg },
+        {
+          backgroundColor: bg,
+          borderRadius: theme.radius.xl,
+          padding: theme.space.xl,
+          gap: theme.space.lg,
+        },
       ]}
     >
       <View style={[styles.row, { gap: theme.space.sm }]}>
-        <Icon name={late ? 'exclamationmark.triangle.fill' : 'cross.case.fill'} size={14} color={accent} weight="bold" />
+        <Icon
+          name={late ? 'exclamationmark.triangle.fill' : 'cross.case.fill'}
+          size={14}
+          color={accent}
+          weight="bold"
+        />
         <Text variant="label" color={accent}>
           {eyebrow}
         </Text>

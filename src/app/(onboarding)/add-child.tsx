@@ -1,7 +1,14 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 
 import type { Sex } from '@/contracts';
 import { useFontScale } from '@/hooks/useFontScale';
@@ -136,7 +143,11 @@ export default function AddChild() {
                     },
                   ]}
                 >
-                  <Text variant="callout" color={on ? 'onPrimary' : 'ink'} style={styles.segmentText}>
+                  <Text
+                    variant="callout"
+                    color={on ? 'onPrimary' : 'ink'}
+                    style={styles.segmentText}
+                  >
                     {o.label}
                   </Text>
                 </Pressable>
@@ -145,7 +156,13 @@ export default function AddChild() {
           </View>
         </Field>
 
-        <Button label="Save and see the schedule" block disabled={!canSave} loading={saving} onPress={save} />
+        <Button
+          label="Save and see the schedule"
+          block
+          disabled={!canSave}
+          loading={saving}
+          onPress={save}
+        />
       </Screen>
     </KeyboardAvoidingView>
   );

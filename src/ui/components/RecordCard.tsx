@@ -35,7 +35,12 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
       ]}
     >
       {/* Header block */}
-      <View style={[styles.header, { padding: theme.space.lg, gap: theme.space.md, borderBottomColor: c.ink }]}>
+      <View
+        style={[
+          styles.header,
+          { padding: theme.space.lg, gap: theme.space.md, borderBottomColor: c.ink },
+        ]}
+      >
         <View style={styles.headerTop}>
           <View style={{ gap: 2 }}>
             <Text variant="label" color="inkMuted">
@@ -56,7 +61,13 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
       </View>
 
       {/* Column headings */}
-      <View style={[styles.row, styles.headRow, { paddingHorizontal: theme.space.lg, borderBottomColor: c.line }]}>
+      <View
+        style={[
+          styles.row,
+          styles.headRow,
+          { paddingHorizontal: theme.space.lg, borderBottomColor: c.line },
+        ]}
+      >
         <Text variant="label" color="inkSoft" style={styles.colVaccine}>
           Vaccine
         </Text>
@@ -70,7 +81,12 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
 
       {visits.map((visit) => (
         <View key={visit.visitId}>
-          <View style={[styles.visitRow, { backgroundColor: c.surfaceMuted, paddingHorizontal: theme.space.lg }]}>
+          <View
+            style={[
+              styles.visitRow,
+              { backgroundColor: c.surfaceMuted, paddingHorizontal: theme.space.lg },
+            ]}
+          >
             <Text variant="caption" color="inkMuted" style={styles.visitLabel}>
               {visit.visitLabel}
             </Text>
@@ -82,6 +98,14 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
             return (
               <View
                 key={item.dose.id}
+                accessible
+                accessibilityLabel={`${item.dose.shortName} ${item.dose.doseLabel}, due ${formatDate(item.dueDate)}, ${
+                  given && item.record?.givenDate
+                    ? `given ${formatDate(item.record.givenDate)}`
+                    : skipped
+                      ? 'skipped'
+                      : 'not yet given'
+                }`}
                 style={[
                   styles.row,
                   {
@@ -97,7 +121,11 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
                     {item.dose.doseLabel}
                   </Text>
                 </View>
-                <Text variant="callout" color={overdue ? 'overdue' : 'inkMuted'} style={[styles.colDate, styles.tabular]}>
+                <Text
+                  variant="callout"
+                  color={overdue ? 'overdue' : 'inkMuted'}
+                  style={[styles.colDate, styles.tabular]}
+                >
                   {formatDate(item.dueDate)}
                 </Text>
                 <View style={[styles.colDate, styles.givenCell]}>
@@ -129,7 +157,8 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
           {scheduleSource}
         </Text>
         <Text variant="caption" color="inkSoft">
-          Generated {formatDateLong(dateToISO(today))} · Kati · Record-keeping aid, not medical advice
+          Generated {formatDateLong(dateToISO(today))} · Kati · Record-keeping aid, not medical
+          advice
         </Text>
       </View>
     </View>
@@ -147,11 +176,15 @@ function Meta({ label, value }: { label: string; value: string }) {
   );
 }
 
-
 const styles = StyleSheet.create({
   sheet: { borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
   header: { borderBottomWidth: 2 },
-  headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
   stamp: { borderWidth: 1.5, paddingHorizontal: 8, paddingVertical: 4, alignSelf: 'flex-start' },
   meta: { flexDirection: 'row', flexWrap: 'wrap' },
   row: { flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingVertical: 8, gap: 8 },

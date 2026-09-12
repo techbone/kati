@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
+import { useFontScale } from '@/hooks/useFontScale';
 import { useTheme } from '@/hooks/useTheme';
 import { Text } from '@/ui/components/Text';
 
@@ -27,8 +28,9 @@ function initials(name: string): string {
   return (first + last).toUpperCase() || '?';
 }
 
-export function Avatar({ name, size = 40 }: AvatarProps) {
+export function Avatar({ name, size: baseSize = 40 }: AvatarProps) {
   const theme = useTheme();
+  const size = baseSize * useFontScale(1.3);
   const hue = hueFor(name);
   const dark = theme.scheme === 'dark';
   const bg = `hsl(${hue}, ${dark ? 30 : 45}%, ${dark ? 26 : 88}%)`;
@@ -37,7 +39,10 @@ export function Avatar({ name, size = 40 }: AvatarProps) {
   return (
     <View
       accessibilityLabel={name}
-      style={[styles.base, { width: size, height: size, borderRadius: size / 2, backgroundColor: bg }]}
+      style={[
+        styles.base,
+        { width: size, height: size, borderRadius: size / 2, backgroundColor: bg },
+      ]}
     >
       <Text
         variant={size >= 56 ? 'title' : 'bodyStrong'}

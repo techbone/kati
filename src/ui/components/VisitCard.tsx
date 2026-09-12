@@ -33,6 +33,9 @@ export function VisitCard({ visit, onPressDose }: VisitCardProps) {
   return (
     <Card stripe={stripe} muted={complete} padded={false}>
       <View
+        accessible
+        accessibilityRole="header"
+        accessibilityLabel={`${visit.visitLabel}, ${formatDate(visit.dueDate)}, ${complete ? 'done' : (pillLabel ?? status)}`}
         style={[
           styles.head,
           {
@@ -70,6 +73,11 @@ export function VisitCard({ visit, onPressDose }: VisitCardProps) {
 }
 
 const styles = StyleSheet.create({
-  head: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap' },
+  head: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
   headText: { flex: 1, gap: 2 },
 });

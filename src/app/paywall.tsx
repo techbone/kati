@@ -1,11 +1,11 @@
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import { usePurchases } from '@/hooks/usePurchases';
 import { useTheme } from '@/hooks/useTheme';
-import { Button, Icon, Screen, Text } from '@/ui/components';
+import { Button, CloseButton, IconBadge, Screen, Text } from '@/ui/components';
 
 const FEATURES: { icon: string; label: string }[] = [
   { icon: 'person.2.fill', label: 'Track every child, not just one' },
@@ -66,18 +66,7 @@ export default function Paywall() {
         <Text variant="label" color="primary">
           Kati Plus
         </Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Close"
-          hitSlop={12}
-          onPress={() => router.back()}
-          style={[
-            styles.close,
-            { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill },
-          ]}
-        >
-          <Icon name="xmark" size={14} color="inkMuted" weight="bold" />
-        </Pressable>
+        <CloseButton onPress={() => router.back()} />
       </View>
 
       <Text variant="title">{headline}</Text>
@@ -85,14 +74,7 @@ export default function Paywall() {
       <View style={{ gap: theme.space.lg }}>
         {FEATURES.map((f) => (
           <View key={f.label} style={[styles.feature, { gap: theme.space.md }]}>
-            <View
-              style={[
-                styles.featureIcon,
-                { backgroundColor: theme.colors.primarySoft, borderRadius: theme.radius.md },
-              ]}
-            >
-              <Icon name={f.icon} size={18} color="primary" />
-            </View>
+            <IconBadge name={f.icon} size={36} />
             <Text variant="body" style={styles.featureText}>
               {f.label}
             </Text>
@@ -158,9 +140,7 @@ export default function Paywall() {
 
 const styles = StyleSheet.create({
   titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  close: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
   feature: { flexDirection: 'row', alignItems: 'center' },
-  featureIcon: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
   featureText: { flex: 1 },
   priceCard: {},
 });
