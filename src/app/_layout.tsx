@@ -10,6 +10,21 @@ import { useTheme } from '@/hooks/useTheme';
 SplashScreen.preventAutoHideAsync();
 SplashScreen.setOptions({ fade: true, duration: 300 });
 
+/**
+ * Native iOS bottom sheet. Must be a direct child of this Stack — form sheets
+ * can't host a nested navigator or a native header, so sheet screens render
+ * their own title row.
+ */
+function sheet(detents: number[]) {
+  return {
+    presentation: 'formSheet' as const,
+    sheetAllowedDetents: detents,
+    sheetInitialDetentIndex: 0,
+    sheetGrabberVisible: true,
+    sheetCornerRadius: 24,
+  };
+}
+
 export default function RootLayout() {
   const theme = useTheme();
   const hydrated = useAppStore((s) => s.hydrated);
@@ -49,7 +64,8 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="(onboarding)" />
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="modals" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="children" options={sheet([0.55, 1])} />
+        <Stack.Screen name="dose" options={sheet([0.8, 1])} />
       </Stack>
     </ThemeProvider>
   );

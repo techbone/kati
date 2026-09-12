@@ -41,10 +41,11 @@ export default function Home() {
 
   const { summary, visits } = schedule;
   const allDone = summary.nextVisit === null;
+  const childId = child.id;
 
-  function onPressDose(_item: ScheduleItem) {
-    // M2: opens the dose detail sheet. Haptic so the tap already feels real.
+  function onPressDose(item: ScheduleItem) {
     Haptics.selectionAsync();
+    router.push({ pathname: '/dose', params: { childId, doseId: item.dose.id } });
   }
 
   return (
@@ -52,7 +53,7 @@ export default function Home() {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`${child.name}, ${formatAge(child.birthDate, today)}. Switch or add a child`}
-        onPress={() => router.push('/modals/children')}
+        onPress={() => router.push('/children')}
         style={({ pressed }) => [styles.header, { gap: theme.space.md, opacity: pressed ? 0.7 : 1 }]}
       >
         <Avatar name={child.name} size={48} />
