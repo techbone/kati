@@ -10,3 +10,4 @@ export { DoseRow } from './DoseRow';
 export { NextVisitHero } from './NextVisitHero';
 export { ProgressBar } from './ProgressBar';
 export { VisitCard } from './VisitCard';
+export { Row } from './Row';
