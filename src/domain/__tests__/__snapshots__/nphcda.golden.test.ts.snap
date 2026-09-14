@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NPHCDA schedule — golden file computes the same schedule it did yesterday 1`] = `[]`;
+
+exports[`NPHCDA schedule — golden file groups into the same clinic visits it did yesterday 1`] = `[]`;
+
+exports[`NPHCDA schedule — golden file summarises the same way it did yesterday 1`] = `
+{
+  "completion": 0,
+  "dueCount": 0,
+  "givenCount": 0,
+  "nextVisit": null,
+  "overdueCount": 0,
+  "totalDoses": 0,
+}
+`;
