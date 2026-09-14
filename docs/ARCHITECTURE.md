@@ -75,8 +75,9 @@ touching a device.
 
 ## Purchases
 
-RevenueCat behind `PurchaseService`. Entitlement `kati_plus` gates exactly three
-things, listed in `contracts/store.ts`: more than one child, PDF export, backup.
+RevenueCat behind `PurchaseService`. Entitlement `kati_plus_pro` (user-facing
+name: Kati Plus) gates exactly three things, listed in `contracts/store.ts`:
+more than one child, PDF export, backup.
 
 `react-native-purchases` is a native module — **it does not run in Expo Go**.
 Everyone needs an EAS development build before they can see a paywall. That is

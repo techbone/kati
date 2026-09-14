@@ -89,7 +89,7 @@ listing is an instant zero.
 Shipaton rules require either a free trial or a promo code for judges. A trial is
 cleaner and it's a five-minute config now versus a retrofit later.
 
-Then RevenueCat: project, entitlement **`kati_plus`**, offering, products linked.
+Then RevenueCat: project, entitlement **`kati_plus_pro`**, offering, products linked.
 
 ---
 

@@ -53,7 +53,7 @@ profiles, typed app config.
 - EAS project init, dev build on all three devices.
 - App Store Connect: app record, bundle ID `com.kati.app`, subscription product,
   **7-day free trial** (the rules require a trial or a judge promo code).
-- RevenueCat: project, entitlement `kati_plus`, offering, products linked.
+- RevenueCat: project, entitlement `kati_plus_pro`, offering, products linked.
 - Privacy policy page live at a real URL.
 - `NotificationService` interface implemented against Expo, permission flow only.
 

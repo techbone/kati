@@ -8,7 +8,8 @@
  * 4. Gates (2nd child / PDF / backup) → `presentPaywallIfNeeded()`.
  * 5. Manage plan → `presentCustomerCenter()` from a non-modal screen.
  *
- * Ops checklist (Abdullah): RC entitlement `kati_plus_pro`; packages
+ * Entitlement id: `KATI_PLUS_ENTITLEMENT` in constants (`kati_plus_pro`).
+ * Ops checklist (Abdullah): RC entitlement must match; packages
  * `monthly` | `yearly` | `lifetime`; 7-day trial; EAS dev build on three
  * phones; sandbox purchase + restore-after-reinstall; fill eas.json submit
  * IDs; host assets/legal/privacy.html and paste URL into App Store Connect.

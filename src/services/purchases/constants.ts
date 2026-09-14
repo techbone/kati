@@ -1,7 +1,6 @@
 /**
- * Must match the entitlement identifier in the RevenueCat dashboard exactly.
- * Project docs historically said `kati_plus`; dashboard is configured as
- * `kati_plus_pro`. Gates stay the same in the store (`isPremium`).
+ * RevenueCat entitlement identifier. Must match the dashboard exactly.
+ * User-facing product name remains "Kati Plus"; in-app gate is `isPremium`.
  */
 export const KATI_PLUS_ENTITLEMENT = 'kati_plus_pro';
 

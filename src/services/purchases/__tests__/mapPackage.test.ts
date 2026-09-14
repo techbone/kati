@@ -1,4 +1,5 @@
 import { formatTrialPeriod, hasActiveEntitlement, mapPurchasesPackage } from '../mapPackage';
+import { KATI_PLUS_ENTITLEMENT } from '../constants';
 
 describe('purchases/mapPackage', () => {
   it('formats intro trial periods', () => {
@@ -32,8 +33,10 @@ describe('purchases/mapPackage', () => {
   });
 
   it('detects the active entitlement', () => {
-    expect(hasActiveEntitlement({ kati_plus_pro: {} }, 'kati_plus_pro')).toBe(true);
-    expect(hasActiveEntitlement({}, 'kati_plus_pro')).toBe(false);
-    expect(hasActiveEntitlement(undefined, 'kati_plus_pro')).toBe(false);
+    expect(
+      hasActiveEntitlement({ [KATI_PLUS_ENTITLEMENT]: {} }, KATI_PLUS_ENTITLEMENT),
+    ).toBe(true);
+    expect(hasActiveEntitlement({}, KATI_PLUS_ENTITLEMENT)).toBe(false);
+    expect(hasActiveEntitlement(undefined, KATI_PLUS_ENTITLEMENT)).toBe(false);
   });
 });
