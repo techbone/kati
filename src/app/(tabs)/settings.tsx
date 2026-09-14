@@ -1,10 +1,16 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Constants from 'expo-constants';
 import * as Haptics from 'expo-haptics';
-import { useRouter } from 'expo-router';
-import { Alert, Pressable, StyleSheet, Switch, View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { Alert, Linking, Pressable, StyleSheet, Switch, View } from 'react-native';
 
-import { usePurchases } from '@/hooks/usePurchases';
+import {
+  isExpoGo,
+  notificationService,
+  presentCustomerCenter,
+  purchaseService,
+} from '@/hooks/services';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
@@ -39,13 +45,56 @@ export default function SettingsTab() {
   const refreshReminders = useAppStore((s) => s.refreshReminders);
   const children = useAppStore((s) => s.children);
   const isPremium = useAppStore((s) => s.isPremium);
-  const { restore, purchasing } = usePurchases();
   const { reminders } = prefs;
+  const [busy, setBusy] = useState<'restore' | 'manage' | null>(null);
+  const [scheduledCount, setScheduledCount] = useState<number | null>(null);
+
+  // Diagnostics: how many reminders iOS is actually holding. Refreshed each
+  // time the tab is focused so it reflects the last sync, not the first.
+  useFocusEffect(
+    useCallback(() => {
+      let live = true;
+      notificationService
+        .getScheduledCount()
+        .then((n) => live && setScheduledCount(n))
+        .catch(() => live && setScheduledCount(null));
+      return () => {
+        live = false;
+      };
+    }, []),
+  );
 
   async function updateReminders(patch: Partial<typeof reminders>) {
     await setPrefs({ reminders: { ...reminders, ...patch } });
-    // Track C's scheduler derives everything from prefs; poke it after every change.
+    // Track A's store derives the plan from prefs and hands it to the scheduler.
     await refreshReminders();
+    notificationService
+      .getScheduledCount()
+      .then(setScheduledCount)
+      .catch(() => {});
+  }
+
+  async function toggleReminders(on: boolean) {
+    if (!on) {
+      await updateReminders({ enabled: false });
+      return;
+    }
+    // Ask for permission at the moment the user opts in — the one time the
+    // system prompt makes sense. Denied → leave the switch off and point at
+    // Settings; never re-prompt on every toggle.
+    const state = await notificationService.requestPermission();
+    if (state !== 'granted') {
+      Alert.alert(
+        'Notifications are off',
+        'Kati can’t remind you until notifications are allowed for it in iOS Settings.',
+        [
+          { text: 'Not now', style: 'cancel' },
+          { text: 'Open Settings', onPress: () => Linking.openSettings() },
+        ],
+      );
+      return;
+    }
+    await updateReminders({ enabled: true });
   }
 
   function toggleLead(days: number) {
@@ -59,13 +108,31 @@ export default function SettingsTab() {
   }
 
   async function onRestore() {
-    const restored = await restore();
-    Alert.alert(
-      restored ? 'Restored' : 'Nothing to restore',
-      restored
-        ? 'Kati Plus is active on this device.'
-        : 'No previous Kati Plus purchase was found on this account.',
-    );
+    setBusy('restore');
+    try {
+      const restored = await purchaseService.restore();
+      Alert.alert(
+        restored ? 'Restored' : 'Nothing to restore',
+        restored
+          ? 'Kati Plus is active on this device.'
+          : 'No previous Kati Plus purchase was found for this Apple ID.',
+      );
+    } catch (err) {
+      Alert.alert('Couldn’t restore', err instanceof Error ? err.message : 'Try again later.');
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function onManage() {
+    setBusy('manage');
+    try {
+      await presentCustomerCenter();
+    } catch (err) {
+      Alert.alert('Couldn’t open', err instanceof Error ? err.message : 'Try again later.');
+    } finally {
+      setBusy(null);
+    }
   }
 
   const version = Constants.expoConfig?.version ?? '—';
@@ -82,7 +149,7 @@ export default function SettingsTab() {
             right={
               <Switch
                 value={reminders.enabled}
-                onValueChange={(v) => updateReminders({ enabled: v })}
+                onValueChange={toggleReminders}
                 trackColor={{ true: theme.colors.primary, false: theme.colors.line }}
                 accessibilityLabel="Reminders"
               />
@@ -146,6 +213,12 @@ export default function SettingsTab() {
                   })}
                 </View>
               </View>
+              <Row
+                label="Scheduled on this phone"
+                detail="iOS holds at most 64; Kati keeps it under 48"
+                value={scheduledCount === null ? '—' : String(scheduledCount)}
+                divider={false}
+              />
             </>
           ) : null}
         </Card>
@@ -181,12 +254,26 @@ export default function SettingsTab() {
             }
             icon={isPremium ? 'checkmark.seal.fill' : 'star'}
           />
+          {isPremium ? (
+            <Row
+              label="Manage plan"
+              detail="Change, cancel, or restore your subscription"
+              onPress={onManage}
+              right={
+                busy === 'manage' ? (
+                  <Text variant="caption" color="inkSoft">
+                    Opening…
+                  </Text>
+                ) : undefined
+              }
+            />
+          ) : null}
           <Row
             label="Restore purchases"
             onPress={onRestore}
             divider={false}
             right={
-              purchasing === 'restore' ? (
+              busy === 'restore' ? (
                 <Text variant="caption" color="inkSoft">
                   Checking…
                 </Text>
@@ -199,7 +286,11 @@ export default function SettingsTab() {
       <Section label="About">
         <Card padded={false}>
           <Row label="Schedule" value={prefs.scheduleVersion} />
-          <Row label="Version" value={version} divider={false} />
+          <Row
+            label="Version"
+            value={isExpoGo ? `${version} · Expo Go` : version}
+            divider={false}
+          />
         </Card>
         <Text variant="caption" color="inkSoft" style={styles.about}>
           Kati keeps everything on this phone. Nothing is uploaded or shared unless you export it

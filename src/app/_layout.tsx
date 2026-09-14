@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
+import { purchaseService } from '@/hooks/services';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -29,11 +30,26 @@ export default function RootLayout() {
   const theme = useTheme();
   const hydrated = useAppStore((s) => s.hydrated);
   const hydrate = useAppStore((s) => s.hydrate);
+  const setPremium = useAppStore((s) => s.setPremium);
   const [fontsLoaded] = useFonts({ Fraunces_400Regular, Fraunces_600SemiBold });
 
   useEffect(() => {
     hydrate();
   }, [hydrate]);
+
+  // Entitlement is never gated on: the app boots free and flips to Plus the
+  // moment RevenueCat answers. A failed init (no key, no network) is logged and
+  // the app carries on — a paywall bug must never lock a parent out of the record.
+  useEffect(() => {
+    const unsubscribe = purchaseService.onEntitlementChange(setPremium);
+    purchaseService
+      .init()
+      .then(() => setPremium(purchaseService.isPremium()))
+      .catch((err: unknown) => {
+        if (__DEV__) console.warn('[purchases] init failed', err);
+      });
+    return unsubscribe;
+  }, [setPremium]);
 
   const ready = hydrated && fontsLoaded;
 
@@ -68,7 +84,6 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="children" options={sheet([0.55, 1])} />
         <Stack.Screen name="dose" options={sheet([0.8, 1])} />
-        <Stack.Screen name="paywall" options={sheet([0.85, 1])} />
       </Stack>
     </ThemeProvider>
   );

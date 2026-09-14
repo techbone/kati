@@ -1,6 +1,9 @@
+import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
+import { exportService, presentPaywallIfNeeded } from '@/hooks/services';
 import { useActiveChild } from '@/hooks/useActiveChild';
 import { usePremium } from '@/hooks/usePremium';
 import { useSchedule } from '@/hooks/useSchedule';
@@ -18,6 +21,7 @@ export default function CardTab() {
   const schedule = useSchedule(child?.id ?? null);
   const scheduleVersion = useAppStore((s) => s.prefs.scheduleVersion);
   const { allows } = usePremium();
+  const [sharing, setSharing] = useState(false);
 
   if (!child || !schedule) {
     return (
@@ -32,20 +36,43 @@ export default function CardTab() {
     );
   }
 
-  function share() {
+  async function share() {
+    if (!child || !schedule) return;
     if (!allows('pdf-export')) {
-      router.push({ pathname: '/paywall', params: { reason: 'pdf-export' } });
-      return;
+      const outcome = await presentPaywallIfNeeded();
+      if (outcome !== 'unlocked' && outcome !== 'not_presented') return;
     }
-    // M3: Track C's ExportService.sharePdf().
-    Alert.alert('Export', 'PDF export arrives with the next milestone.');
+    setSharing(true);
+    try {
+      await exportService.sharePdf({
+        child,
+        items: schedule.items,
+        summary: schedule.summary,
+        scheduleSource: `Schedule ${scheduleVersion}`,
+        generatedAt: new Date(),
+      });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (err) {
+      Alert.alert(
+        'Couldn’t share the record',
+        err instanceof Error ? err.message : 'Something went wrong. Try again.',
+      );
+    } finally {
+      setSharing(false);
+    }
   }
 
   return (
     <Screen contentStyle={{ gap: theme.space.lg }}>
       <View style={styles.titleRow}>
         <Text variant="title">Card</Text>
-        <Button label="Share PDF" icon="square.and.arrow.up" variant="secondary" onPress={share} />
+        <Button
+          label="Share PDF"
+          icon="square.and.arrow.up"
+          variant="secondary"
+          loading={sharing}
+          onPress={share}
+        />
       </View>
       <Text variant="callout" color="inkMuted">
         Show this at the clinic. It has every dose and the date it was given.
