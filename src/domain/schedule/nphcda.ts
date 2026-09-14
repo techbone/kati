@@ -447,10 +447,10 @@ export const NPHCDA_SCHEDULE: ScheduleDefinition = {
   version: 'NPHCDA-2024.1',
   source:
     'National Primary Health Care Development Agency (NPHCDA) — national routine immunization schedule',
-  // TODO(A1): needs the direct NPHCDA URL for this chart (nphcda.gov.ng or
-  // NPHCDA's own @nphcda / @nphcdang post) — it is displayed in-app, and a
-  // third-party repost is not the right thing to cite even though the
-  // graphic itself is NPHCDA-branded.
-  sourceUrl: '',
+  // NPHCDA's official site. Not a deep link to this exact chart — as of this
+  // writing nphcda.gov.ng/resources/ reports "No downloads found!", so the
+  // chart itself has no independent URL to cite yet — but it is NPHCDA's own
+  // domain, which is what a parent needs to trust the number on the page.
+  sourceUrl: 'https://nphcda.gov.ng',
   doses,
 };
