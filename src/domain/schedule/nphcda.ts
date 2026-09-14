@@ -48,7 +48,6 @@ import {
 const weeks = (n: number): number => n * 7;
 const preciseMonths = (n: number): number => (n * 91) / 3;
 const months = (n: number): number => Math.round(preciseMonths(n));
-const years = (n: number): number => months(n * 12);
 
 /** Keeps each row below to one readable line. */
 function dose(row: {
@@ -79,13 +78,25 @@ function dose(row: {
  * Where the chart says "Subcutaneous" the note says so, because `route` only
  * distinguishes oral / injection / intradermal.
  *
- * NOT INCLUDED: the chart's Malaria Vaccine, at 5, 6, 7 and 15 months —
- * footnoted "** Malaria Vaccine available in Kebbi and Bayelsa state only".
- * The app has no way to know which state a child is in (Child carries no
- * location field, and the contract is frozen), so including it would show
- * every child outside two of thirty-six states as permanently overdue for a
- * dose they cannot get. Left out by default rather than guessed at — flagged
- * for the team to decide whether it needs a location field and an opt-in.
+ * TWO DOSES ON THE CHART ARE DELIBERATELY NOT INCLUDED, decided rather than
+ * left open, because both are the same shape of problem: a dose that is not
+ * for every child, on a schedule engine that has no field to say who it is
+ * for (`VaccineDose` is frozen — a fix needs all three track owners).
+ * Showing either to the wrong children would mean a false, permanent
+ * `overdue` for a dose they were never going to get — worse for trust than
+ * an omission, since the omission at least fails silently.
+ *
+ * - Malaria Vaccine (5, 6, 7, 15 months) — footnoted "available in Kebbi and
+ *   Bayelsa state only". `Child` has no location field, so this would be
+ *   wrong for 34 of 36 states.
+ * - HPV (9 years, single dose) — footnoted "for all 9 year old girls".
+ *   `Child.sex` exists, but nothing on `VaccineDose` lets the engine act on
+ *   it, and hardcoding this one vaccine's id as a special case in the
+ *   otherwise-generic engine was rejected as the wrong shape of fix.
+ *
+ * Both need the same real fix — a field like `restrictedTo` on `VaccineDose`
+ * — as one contracts conversation, not two. Until then, re-adding either is
+ * a one-line `dose({...})` call; see git history on this file for the row.
  */
 const doses: VaccineDose[] = [
   // ── At birth ────────────────────────────────────────────────────────────
@@ -419,28 +430,7 @@ const doses: VaccineDose[] = [
     note: '0.5ml · subcutaneous · left upper arm',
   }),
 
-  // ── 9 years ─────────────────────────────────────────────────────────────
-  // Chart footnote: "* HPV Vaccine for all 9 year old girls" — a single
-  // dose, not the 2-dose series the earlier chart showed. The contract has
-  // no field to restrict a dose by sex (VaccineDose is frozen), so this row
-  // is included for every child and the restriction is stated only in
-  // `note`. That is a real gap, not a stylistic choice: as it stands the
-  // engine will show this as overdue for boys too. Flagged for the team —
-  // needs either a contracts change (all three owners) or a decision to
-  // filter this dose in the engine keyed off `child.sex`.
-  dose({
-    id: 'hpv',
-    vaccineId: 'hpv',
-    vaccineName: 'Human Papillomavirus vaccine',
-    shortName: 'HPV',
-    doseLabel: 'Single dose',
-    offsetDays: years(9),
-    visitId: 'year-9',
-    visitLabel: '9 years',
-    route: 'injection',
-    protectsAgainst: ['Human papillomavirus'],
-    note: '0.5ml · intramuscular · deltoid muscle (left upper arm) · for girls only, per NPHCDA',
-  }),
+  // 9 years: HPV (single dose) is NOT included — see the note above `doses`.
 ];
 
 export const NPHCDA_SCHEDULE: ScheduleDefinition = {

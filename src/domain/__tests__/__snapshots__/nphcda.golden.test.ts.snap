@@ -186,14 +186,6 @@ exports[`NPHCDA schedule — golden file computes the same schedule it did yeste
     "status": "upcoming",
     "visit": "month-15",
   },
-  {
-    "daysUntilDue": 3017,
-    "dueDate": "2034-06-04",
-    "id": "hpv",
-    "offsetDays": 3276,
-    "status": "upcoming",
-    "visit": "year-9",
-  },
 ]
 `;
 
@@ -278,15 +270,6 @@ exports[`NPHCDA schedule — golden file groups into the same clinic visits it d
     "visitId": "month-15",
     "visitLabel": "15 months",
   },
-  {
-    "doses": [
-      "hpv",
-    ],
-    "dueDate": "2034-06-04",
-    "status": "upcoming",
-    "visitId": "year-9",
-    "visitLabel": "9 years",
-  },
 ]
 `;
 
@@ -369,6 +352,6 @@ exports[`NPHCDA schedule — golden file summarises the same way it did yesterda
     "visitLabel": "At birth",
   },
   "overdueCount": 18,
-  "totalDoses": 24,
+  "totalDoses": 23,
 }
 `;
