@@ -6,6 +6,7 @@ import type { ScheduleItem } from '@/contracts';
 import { useActiveChild } from '@/hooks/useActiveChild';
 import { useFontScale } from '@/hooks/useFontScale';
 import { useSchedule } from '@/hooks/useSchedule';
+import { scheduleSource } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
 import {
@@ -132,8 +133,7 @@ export default function Home() {
       </View>
 
       <Text variant="caption" color="inkSoft" align="center" style={styles.footer}>
-        Based on the national routine immunization schedule. Kati is a record-keeping aid, not
-        medical advice.
+        Schedule: {scheduleSource.name}. Kati is a record-keeping aid, not medical advice.
       </Text>
     </Screen>
   );
