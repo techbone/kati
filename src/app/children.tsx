@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import type { ChildId } from '@/contracts';
+import { presentPaywallIfNeeded } from '@/hooks/services';
 import { usePremium } from '@/hooks/usePremium';
 import { useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
@@ -26,10 +27,10 @@ export default function ChildrenModal() {
     router.back();
   }
 
-  function add() {
+  async function add() {
     if (!allows('multiple-children')) {
-      router.push({ pathname: '/paywall', params: { reason: 'multiple-children' } });
-      return;
+      const outcome = await presentPaywallIfNeeded();
+      if (outcome !== 'unlocked' && outcome !== 'not_presented') return;
     }
     router.push('/(onboarding)/add-child');
   }
