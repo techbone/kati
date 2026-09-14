@@ -7,6 +7,7 @@ import type { ExpoConfig } from 'expo/config';
 const config: ExpoConfig = {
   name: 'Kati',
   slug: 'kati',
+  owner: 'abdullahabubakar461',
   version: '1.0.0',
   orientation: 'portrait',
   scheme: 'kati',
@@ -66,6 +67,16 @@ const config: ExpoConfig = {
   experiments: {
     typedRoutes: true,
     reactCompiler: true,
+  },
+
+  extra: {
+    eas: {
+      projectId: '10f269f9-16cc-42f1-8501-83f4d08d0ed3',
+    },
+    // Public SDK key (safe in the client). Test Store key for sandbox / Shipaton
+    // judging. Swap to the iOS App Store key for production/TestFlight builds —
+    // never ship a Test Store key to App Review.
+    revenueCatApiKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY ?? 'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
   },
 };
 

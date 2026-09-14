@@ -1,0 +1,33 @@
+# Ignore build artifacts
+android/build/
+ios/build/
+build/
+dist/
+out/
+
+# Node modules (EAS will install fresh)
+node_modules/
+
+# Gradle caches
+.gradle/
+**/build/
+**/.cxx/
+
+# Version control
+.git/
+.gitignore
+
+# IDE & logs
+.vscode/
+.idea/
+*.log
+*.tmp
+
+# Expo local configs
+.expo/
+.expo-shared/
+
+# Test & scripts
+__tests__/
+coverage/
+scripts/
