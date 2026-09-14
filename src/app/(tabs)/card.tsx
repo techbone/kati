@@ -7,7 +7,7 @@ import { exportService, presentPaywallIfNeeded } from '@/hooks/services';
 import { useActiveChild } from '@/hooks/useActiveChild';
 import { usePremium } from '@/hooks/usePremium';
 import { useSchedule } from '@/hooks/useSchedule';
-import { useAppStore } from '@/hooks/useStore';
+import { scheduleSource } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
 import { Button, EmptyState, RecordCard, Screen, Text } from '@/ui/components';
@@ -19,7 +19,6 @@ export default function CardTab() {
   const today = useToday();
   const child = useActiveChild();
   const schedule = useSchedule(child?.id ?? null);
-  const scheduleVersion = useAppStore((s) => s.prefs.scheduleVersion);
   const { allows } = usePremium();
   const [sharing, setSharing] = useState(false);
 
@@ -48,7 +47,7 @@ export default function CardTab() {
         child,
         items: schedule.items,
         summary: schedule.summary,
-        scheduleSource: `Schedule ${scheduleVersion}`,
+        scheduleSource: `${scheduleSource.name} · ${scheduleSource.version}`,
         generatedAt: new Date(),
       });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -82,7 +81,7 @@ export default function CardTab() {
         child={child}
         visits={schedule.visits}
         summary={schedule.summary}
-        scheduleSource={`Schedule ${scheduleVersion}`}
+        scheduleSource={`${scheduleSource.name} · ${scheduleSource.version}`}
         today={today}
       />
     </Screen>

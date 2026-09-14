@@ -3,9 +3,21 @@
  * `services/mock/mockSelectors.ts` but backed by the actual engine
  * (`src/domain/schedule`) and the real NPHCDA table, not the placeholder.
  */
-import type { AppState, ChildId, ScheduleItem, ScheduleSelectors, ScheduleSummary, ScheduleVisit } from '@/contracts';
+import type {
+  AppState,
+  ChildId,
+  ScheduleItem,
+  ScheduleSelectors,
+  ScheduleSummary,
+  ScheduleVisit,
+} from '@/contracts';
 import { toISODate } from '@/domain/date';
-import { computeScheduleItems, computeSummary, groupIntoVisits, NPHCDA_SCHEDULE } from '@/domain/schedule';
+import {
+  computeScheduleItems,
+  computeSummary,
+  groupIntoVisits,
+  NPHCDA_SCHEDULE,
+} from '@/domain/schedule';
 
 function selectItems(state: AppState, childId: ChildId, today: Date): ScheduleItem[] {
   const child = state.children.find((c) => c.id === childId);
@@ -23,3 +35,10 @@ function selectSummary(state: AppState, childId: ChildId, today: Date): Schedule
 }
 
 export const appSelectors: ScheduleSelectors = { selectItems, selectVisits, selectSummary };
+
+/** Provenance for the record card and the home footer. */
+export const scheduleSource = {
+  name: NPHCDA_SCHEDULE.source,
+  version: NPHCDA_SCHEDULE.version,
+  url: NPHCDA_SCHEDULE.sourceUrl,
+};
