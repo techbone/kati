@@ -1,4 +1,11 @@
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 
 import { useTheme } from '@/hooks/useTheme';
 
@@ -8,9 +15,21 @@ interface ProgressBarProps {
   accessibilityLabel: string;
 }
 
+/**
+ * Animates toward its value rather than jumping, so marking a dose given
+ * reads as progress being made — the one moment of reward in the app.
+ */
 export function ProgressBar({ value, accessibilityLabel }: ProgressBarProps) {
   const theme = useTheme();
   const pct = Math.max(0, Math.min(1, value)) * 100;
+  const width = useSharedValue(pct);
+
+  useEffect(() => {
+    width.value = withTiming(pct, { duration: 500, easing: Easing.out(Easing.cubic) });
+  }, [pct, width]);
+
+  const fill = useAnimatedStyle(() => ({ width: `${width.value}%` }));
+
   return (
     <View
       accessibilityRole="progressbar"
@@ -21,14 +40,11 @@ export function ProgressBar({ value, accessibilityLabel }: ProgressBarProps) {
         { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill },
       ]}
     >
-      <View
+      <Animated.View
         style={[
           styles.fill,
-          {
-            width: `${pct}%`,
-            backgroundColor: theme.colors.given,
-            borderRadius: theme.radius.pill,
-          },
+          fill,
+          { backgroundColor: theme.colors.given, borderRadius: theme.radius.pill },
         ]}
       />
     </View>

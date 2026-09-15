@@ -82,6 +82,7 @@ export default function CardTab() {
         visits={schedule.visits}
         summary={schedule.summary}
         scheduleSource={`${scheduleSource.name} · ${scheduleSource.version}`}
+        scheduleUrl={scheduleSource.url}
         today={today}
       />
     </Screen>

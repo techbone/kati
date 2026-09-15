@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, { ZoomIn } from 'react-native-reanimated';
 
 import type { ScheduleItem } from '@/contracts';
 import { useTheme } from '@/hooks/useTheme';
@@ -46,12 +47,18 @@ export function DoseRow({ item, onPress, last = false }: DoseRowProps) {
         },
       ]}
     >
-      <Icon
-        name={icon}
-        size={20}
-        color={iconColor}
-        weight={status === 'given' ? 'semibold' : 'regular'}
-      />
+      {/* keyed on status so a change re-mounts the icon and plays the entrance */}
+      <Animated.View
+        key={status}
+        entering={status === 'given' ? ZoomIn.springify().damping(14) : undefined}
+      >
+        <Icon
+          name={icon}
+          size={20}
+          color={iconColor}
+          weight={status === 'given' ? 'semibold' : 'regular'}
+        />
+      </Animated.View>
       <View style={styles.text}>
         <Text variant="body" color={done ? 'inkMuted' : 'ink'}>
           {dose.shortName}

@@ -11,7 +11,7 @@ import {
   presentCustomerCenter,
   purchaseService,
 } from '@/hooks/services';
-import { useAppStore } from '@/hooks/useStore';
+import { scheduleSource, useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
 import { Avatar, Card, Row, Screen, Text } from '@/ui/components';
@@ -285,7 +285,12 @@ export default function SettingsTab() {
 
       <Section label="About">
         <Card padded={false}>
-          <Row label="Schedule" value={prefs.scheduleVersion} />
+          <Row
+            label="Schedule"
+            detail={scheduleSource.name}
+            value={scheduleSource.version}
+            onPress={() => Linking.openURL(scheduleSource.url)}
+          />
           <Row
             label="Version"
             value={isExpoGo ? `${version} · Expo Go` : version}

@@ -1,6 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown, LinearTransition } from 'react-native-reanimated';
 
 import type { ScheduleItem } from '@/contracts';
 import { useActiveChild } from '@/hooks/useActiveChild';
@@ -85,7 +86,13 @@ export default function Home() {
       </Pressable>
 
       {summary.nextVisit ? (
-        <NextVisitHero visit={summary.nextVisit} />
+        <Animated.View
+          key={`${summary.nextVisit.visitId}-${summary.nextVisit.status}`}
+          entering={FadeIn.duration(350)}
+          layout={LinearTransition.springify().damping(18)}
+        >
+          <NextVisitHero visit={summary.nextVisit} />
+        </Animated.View>
       ) : (
         <View
           style={[
@@ -127,14 +134,31 @@ export default function Home() {
         <Text variant="label" color="inkMuted">
           Clinic visits
         </Text>
-        {visits.map((visit) => (
-          <VisitCard key={visit.visitId} visit={visit} onPressDose={onPressDose} />
+        {visits.map((visit, i) => (
+          <Animated.View
+            key={visit.visitId}
+            entering={FadeInDown.delay(Math.min(i, 6) * 45).duration(320)}
+            layout={LinearTransition.springify().damping(18)}
+          >
+            <VisitCard visit={visit} onPressDose={onPressDose} />
+          </Animated.View>
         ))}
       </View>
 
-      <Text variant="caption" color="inkSoft" align="center" style={styles.footer}>
-        Schedule: {scheduleSource.name}. Kati is a record-keeping aid, not medical advice.
-      </Text>
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel={`Schedule source: ${scheduleSource.name}. Opens in browser.`}
+        onPress={() => Linking.openURL(scheduleSource.url)}
+        style={styles.footer}
+      >
+        <Text variant="caption" color="inkSoft" align="center">
+          Schedule:{' '}
+          <Text variant="caption" color="primary">
+            {scheduleSource.name}
+          </Text>{' '}
+          · Kati is a record-keeping aid, not medical advice.
+        </Text>
+      </Pressable>
     </Screen>
   );
 }

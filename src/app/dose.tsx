@@ -243,6 +243,7 @@ function DoseDetail({
             >
               <Text variant="body">{formatDateLong(dateToISO(givenDate))}</Text>
               <DateTimePicker
+                accessibilityLabel="Date given"
                 value={givenDate}
                 mode="date"
                 display="compact"
@@ -263,6 +264,7 @@ function DoseDetail({
             </Text>
             <TextInput
               id="dose-note"
+              accessibilityLabel="Note"
               value={note}
               onChangeText={setNote}
               placeholder="Clinic, batch number, anything worth keeping"
