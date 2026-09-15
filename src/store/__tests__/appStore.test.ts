@@ -20,6 +20,7 @@ jest.mock('expo-notifications', () => ({
   scheduleNotificationAsync: (...args: unknown[]) => mockSchedule(...args),
   getAllScheduledNotificationsAsync: jest.fn(async () => []),
   SchedulableTriggerInputTypes: { DATE: 'date' },
+  setNotificationHandler: jest.fn(),
 }));
 
 function freshState() {

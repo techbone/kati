@@ -16,6 +16,7 @@ jest.mock('expo-notifications', () => ({
   scheduleNotificationAsync: (...args: unknown[]) => mockSchedule(...args),
   getAllScheduledNotificationsAsync: (...args: unknown[]) => mockGetAll(...args),
   SchedulableTriggerInputTypes: { DATE: 'date' },
+  setNotificationHandler: jest.fn(),
 }));
 
 describe('notifications/expoNotificationService', () => {
