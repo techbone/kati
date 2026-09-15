@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 
 import type { ScheduleItem } from '@/contracts';
+import { useMotion } from '@/hooks/useMotion';
 import { useTheme } from '@/hooks/useTheme';
 import { Icon } from '@/ui/components/Icon';
 import { Text } from '@/ui/components/Text';
@@ -16,6 +17,7 @@ interface DoseRowProps {
 /** One dose inside a visit card. Tap → dose detail (M2). */
 export function DoseRow({ item, onPress, last = false }: DoseRowProps) {
   const theme = useTheme();
+  const { motion } = useMotion();
   const { dose, status, record } = item;
   const done = status === 'given' || status === 'skipped';
 
@@ -51,7 +53,7 @@ export function DoseRow({ item, onPress, last = false }: DoseRowProps) {
       {/* keyed on status so a change re-mounts the icon and plays the entrance */}
       <Animated.View
         key={status}
-        entering={status === 'given' ? ZoomIn.springify().damping(14) : undefined}
+        entering={status === 'given' ? motion(ZoomIn.springify().damping(14)) : undefined}
       >
         <Icon
           name={icon}

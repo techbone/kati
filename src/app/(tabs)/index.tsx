@@ -6,6 +6,7 @@ import Animated, { FadeIn, FadeInDown, LinearTransition } from 'react-native-rea
 import type { ScheduleItem } from '@/contracts';
 import { useActiveChild } from '@/hooks/useActiveChild';
 import { useFontScale } from '@/hooks/useFontScale';
+import { useMotion } from '@/hooks/useMotion';
 import { useSchedule } from '@/hooks/useSchedule';
 import { scheduleSource, useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
@@ -31,6 +32,7 @@ export default function Home() {
   const schedule = useSchedule(child?.id ?? null);
   const markGiven = useAppStore((s) => s.markGiven);
   const chrome = useFontScale(1.3);
+  const { motion } = useMotion();
 
   if (!child || !schedule) {
     return (
@@ -96,8 +98,8 @@ export default function Home() {
       {summary.nextVisit ? (
         <Animated.View
           key={`${summary.nextVisit.visitId}-${summary.nextVisit.status}`}
-          entering={FadeIn.duration(350)}
-          layout={LinearTransition.springify().damping(18)}
+          entering={motion(FadeIn.duration(350))}
+          layout={motion(LinearTransition.springify().damping(18))}
         >
           <NextVisitHero visit={summary.nextVisit} />
         </Animated.View>
@@ -145,8 +147,8 @@ export default function Home() {
         {visits.map((visit, i) => (
           <Animated.View
             key={visit.visitId}
-            entering={FadeInDown.delay(Math.min(i, 6) * 45).duration(320)}
-            layout={LinearTransition.springify().damping(18)}
+            entering={motion(FadeInDown.delay(Math.min(i, 6) * 45).duration(320))}
+            layout={motion(LinearTransition.springify().damping(18))}
           >
             <TimelineRow
               status={visit.status}

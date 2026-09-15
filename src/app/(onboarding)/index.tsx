@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
 
+import { useMotion } from '@/hooks/useMotion';
 import { useTheme } from '@/hooks/useTheme';
 import { Button, IconBadge, Screen, Text } from '@/ui/components';
 
@@ -26,10 +27,11 @@ const POINTS: { icon: string; title: string; body: string }[] = [
 export default function Welcome() {
   const theme = useTheme();
   const router = useRouter();
+  const { motion } = useMotion();
 
   return (
     <Screen contentStyle={styles.content}>
-      <Animated.View entering={FadeIn.duration(400)} style={{ gap: theme.space.lg }}>
+      <Animated.View entering={motion(FadeIn.duration(400))} style={{ gap: theme.space.lg }}>
         <Text variant="label" color="primary">
           Kati
         </Text>
@@ -43,7 +45,7 @@ export default function Welcome() {
         {POINTS.map((p, i) => (
           <Animated.View
             key={p.title}
-            entering={FadeInDown.delay(250 + i * 110).duration(380)}
+            entering={motion(FadeInDown.delay(250 + i * 110).duration(380))}
             style={[styles.point, { gap: theme.space.lg }]}
           >
             <IconBadge name={p.icon} />
@@ -57,7 +59,7 @@ export default function Welcome() {
         ))}
       </View>
 
-      <Animated.View entering={FadeInUp.delay(650).duration(380)} style={{ gap: theme.space.md }}>
+      <Animated.View entering={motion(FadeInUp.delay(650).duration(380))} style={{ gap: theme.space.md }}>
         <Button
           label="Add your child"
           icon="plus"
