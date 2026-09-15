@@ -14,3 +14,4 @@ export { Row } from './Row';
 export { RecordCard } from './RecordCard';
 export { CloseButton } from './CloseButton';
 export { IconBadge } from './IconBadge';
+export { TimelineRow } from './TimelineRow';

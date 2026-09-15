@@ -61,9 +61,15 @@ export function RecordCard({
             </Text>
             <Text variant="title">{child.name}</Text>
           </View>
-          <View style={[styles.stamp, { borderColor: c.primary, borderRadius: theme.radius.sm }]}>
-            <Text variant="label" color="primary">
+          <View
+            accessibilityLabel={`${summary.givenCount} of ${summary.totalDoses} doses given`}
+            style={[styles.stamp, { borderColor: c.primary }]}
+          >
+            <Text variant="label" color="primary" style={styles.stampText}>
               {summary.givenCount}/{summary.totalDoses}
+            </Text>
+            <Text variant="label" color="primary" style={styles.stampSub}>
+              given
             </Text>
           </View>
         </View>
@@ -210,7 +216,19 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 12,
   },
-  stamp: { borderWidth: 1.5, paddingHorizontal: 8, paddingVertical: 4, alignSelf: 'flex-start' },
+  // A rubber stamp: double-ruled, slightly askew, the way a clinic stamps the card.
+  stamp: {
+    borderWidth: 2,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    transform: [{ rotate: '-5deg' }],
+    opacity: 0.85,
+  },
+  stampText: { fontSize: 16, lineHeight: 18, letterSpacing: 0.5 },
+  stampSub: { fontSize: 9, lineHeight: 11, letterSpacing: 1.2 },
   meta: { flexDirection: 'row', flexWrap: 'wrap' },
   row: { flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingVertical: 8, gap: 8 },
   headRow: { minHeight: 32, paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth },

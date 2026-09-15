@@ -18,6 +18,7 @@ import {
   ProgressBar,
   Screen,
   Text,
+  TimelineRow,
   VisitCard,
 } from '@/ui/components';
 import { formatAge } from '@/ui/format';
@@ -130,8 +131,8 @@ export default function Home() {
         />
       </View>
 
-      <View style={{ gap: theme.space.md }}>
-        <Text variant="label" color="inkMuted">
+      <View style={{ gap: theme.space.sm }}>
+        <Text variant="label" color="inkMuted" style={styles.sectionLabel}>
           Clinic visits
         </Text>
         {visits.map((visit, i) => (
@@ -140,7 +141,16 @@ export default function Home() {
             entering={FadeInDown.delay(Math.min(i, 6) * 45).duration(320)}
             layout={LinearTransition.springify().damping(18)}
           >
-            <VisitCard visit={visit} onPressDose={onPressDose} />
+            <TimelineRow
+              status={visit.status}
+              complete={visit.complete}
+              first={i === 0}
+              last={i === visits.length - 1}
+            >
+              <View style={styles.cardSpacing}>
+                <VisitCard visit={visit} onPressDose={onPressDose} />
+              </View>
+            </TimelineRow>
           </Animated.View>
         ))}
       </View>
@@ -176,5 +186,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   strong: { fontWeight: '600' },
+  sectionLabel: { marginBottom: 4 },
+  cardSpacing: { paddingBottom: 12 },
   footer: { paddingTop: 8 },
 });

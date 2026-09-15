@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button, IconBadge, Screen, Text } from '@/ui/components';
@@ -28,7 +29,7 @@ export default function Welcome() {
 
   return (
     <Screen contentStyle={styles.content}>
-      <View style={{ gap: theme.space.lg }}>
+      <Animated.View entering={FadeIn.duration(400)} style={{ gap: theme.space.lg }}>
         <Text variant="label" color="primary">
           Kati
         </Text>
@@ -36,11 +37,15 @@ export default function Welcome() {
         <Text variant="callout" color="inkMuted">
           Works offline. Stays on this phone. Nothing is uploaded anywhere.
         </Text>
-      </View>
+      </Animated.View>
 
       <View style={{ gap: theme.space.xl }}>
-        {POINTS.map((p) => (
-          <View key={p.title} style={[styles.point, { gap: theme.space.lg }]}>
+        {POINTS.map((p, i) => (
+          <Animated.View
+            key={p.title}
+            entering={FadeInDown.delay(250 + i * 110).duration(380)}
+            style={[styles.point, { gap: theme.space.lg }]}
+          >
             <IconBadge name={p.icon} />
             <View style={[styles.pointText, { gap: 2 }]}>
               <Text variant="bodyStrong">{p.title}</Text>
@@ -48,11 +53,11 @@ export default function Welcome() {
                 {p.body}
               </Text>
             </View>
-          </View>
+          </Animated.View>
         ))}
       </View>
 
-      <View style={{ gap: theme.space.md }}>
+      <Animated.View entering={FadeInUp.delay(650).duration(380)} style={{ gap: theme.space.md }}>
         <Button
           label="Add your child"
           icon="plus"
@@ -62,7 +67,7 @@ export default function Welcome() {
         <Text variant="caption" color="inkSoft" align="center">
           Kati is a record-keeping aid, not medical advice. Always follow your clinic’s guidance.
         </Text>
-      </View>
+      </Animated.View>
     </Screen>
   );
 }
