@@ -59,8 +59,11 @@ export function SwipeToGive({ enabled, onGive, children }: SwipeToGiveProps) {
       overshootLeft={false}
       dragOffsetFromLeftEdge={12}
       renderLeftActions={(progress) => <GiveAction progress={progress} />}
+      // ReanimatedSwipeable reports the SWIPE direction, not the panel that
+      // opened: a right-swipe revealing the left panel arrives as RIGHT.
+      // (The legacy Swipeable used the opposite convention.)
       onSwipeableOpen={(direction) => {
-        if (direction !== SwipeDirection.LEFT) return;
+        if (direction !== SwipeDirection.RIGHT) return;
         onGive();
         ref.current?.close();
       }}
