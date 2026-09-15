@@ -1,12 +1,13 @@
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown, LinearTransition } from 'react-native-reanimated';
 
 import type { ScheduleItem } from '@/contracts';
 import { useActiveChild } from '@/hooks/useActiveChild';
 import { useFontScale } from '@/hooks/useFontScale';
 import { useSchedule } from '@/hooks/useSchedule';
-import { scheduleSource } from '@/hooks/useStore';
+import { scheduleSource, useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
 import {
@@ -17,9 +18,10 @@ import {
   ProgressBar,
   Screen,
   Text,
+  TimelineRow,
   VisitCard,
 } from '@/ui/components';
-import { formatAge } from '@/ui/format';
+import { dateToISO, formatAge } from '@/ui/format';
 
 export default function Home() {
   const theme = useTheme();
@@ -27,6 +29,7 @@ export default function Home() {
   const today = useToday();
   const child = useActiveChild();
   const schedule = useSchedule(child?.id ?? null);
+  const markGiven = useAppStore((s) => s.markGiven);
   const chrome = useFontScale(1.3);
 
   if (!child || !schedule) {
@@ -49,6 +52,12 @@ export default function Home() {
   function onPressDose(item: ScheduleItem) {
     Haptics.selectionAsync();
     router.push({ pathname: '/dose', params: { childId, doseId: item.dose.id } });
+  }
+
+  // Swipe = "given today". Anything else (a past date, a note) goes through the sheet.
+  async function onSwipeGive(item: ScheduleItem) {
+    await markGiven(childId, item.dose.id, dateToISO(today));
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   }
 
   return (
@@ -85,7 +94,13 @@ export default function Home() {
       </Pressable>
 
       {summary.nextVisit ? (
-        <NextVisitHero visit={summary.nextVisit} />
+        <Animated.View
+          key={`${summary.nextVisit.visitId}-${summary.nextVisit.status}`}
+          entering={FadeIn.duration(350)}
+          layout={LinearTransition.springify().damping(18)}
+        >
+          <NextVisitHero visit={summary.nextVisit} />
+        </Animated.View>
       ) : (
         <View
           style={[
@@ -123,18 +138,44 @@ export default function Home() {
         />
       </View>
 
-      <View style={{ gap: theme.space.md }}>
-        <Text variant="label" color="inkMuted">
+      <View style={{ gap: theme.space.sm }}>
+        <Text variant="label" color="inkMuted" style={styles.sectionLabel}>
           Clinic visits
         </Text>
-        {visits.map((visit) => (
-          <VisitCard key={visit.visitId} visit={visit} onPressDose={onPressDose} />
+        {visits.map((visit, i) => (
+          <Animated.View
+            key={visit.visitId}
+            entering={FadeInDown.delay(Math.min(i, 6) * 45).duration(320)}
+            layout={LinearTransition.springify().damping(18)}
+          >
+            <TimelineRow
+              status={visit.status}
+              complete={visit.complete}
+              first={i === 0}
+              last={i === visits.length - 1}
+            >
+              <View style={styles.cardSpacing}>
+                <VisitCard visit={visit} onPressDose={onPressDose} onSwipeGive={onSwipeGive} />
+              </View>
+            </TimelineRow>
+          </Animated.View>
         ))}
       </View>
 
-      <Text variant="caption" color="inkSoft" align="center" style={styles.footer}>
-        Schedule: {scheduleSource.name}. Kati is a record-keeping aid, not medical advice.
-      </Text>
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel={`Schedule source: ${scheduleSource.name}. Opens in browser.`}
+        onPress={() => Linking.openURL(scheduleSource.url)}
+        style={styles.footer}
+      >
+        <Text variant="caption" color="inkSoft" align="center">
+          Schedule:{' '}
+          <Text variant="caption" color="primary">
+            {scheduleSource.name}
+          </Text>{' '}
+          · Kati is a record-keeping aid, not medical advice.
+        </Text>
+      </Pressable>
     </Screen>
   );
 }
@@ -152,5 +193,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   strong: { fontWeight: '600' },
+  sectionLabel: { marginBottom: 4 },
+  cardSpacing: { paddingBottom: 12 },
   footer: { paddingTop: 8 },
 });

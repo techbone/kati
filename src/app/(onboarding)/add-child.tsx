@@ -78,6 +78,7 @@ export default function AddChild() {
         <Field label="Name">
           <TextInput
             id="child-name"
+            accessibilityLabel="Child's name"
             value={name}
             onChangeText={setName}
             placeholder="e.g. Amina"
@@ -113,6 +114,7 @@ export default function AddChild() {
             ]}
           >
             <DateTimePicker
+              accessibilityLabel="Date of birth"
               value={birthDate}
               mode="date"
               display="spinner"
@@ -133,6 +135,7 @@ export default function AddChild() {
                   key={o.value}
                   accessibilityRole="radio"
                   accessibilityState={{ selected: on }}
+                  accessibilityLabel={o.label}
                   onPress={() => setSex(o.value)}
                   style={[
                     styles.segmentItem,

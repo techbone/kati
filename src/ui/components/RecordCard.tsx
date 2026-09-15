@@ -1,6 +1,7 @@
-import { StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import type { Child, ScheduleSummary, ScheduleVisit } from '@/contracts';
+import { useFontScale } from '@/hooks/useFontScale';
 import { useTheme } from '@/hooks/useTheme';
 import { Icon } from '@/ui/components/Icon';
 import { Text } from '@/ui/components/Text';
@@ -11,6 +12,8 @@ interface RecordCardProps {
   visits: ScheduleVisit[];
   summary: ScheduleSummary;
   scheduleSource: string;
+  /** Tapping the source line opens this. */
+  scheduleUrl?: string;
   today: Date;
 }
 
@@ -22,9 +25,19 @@ const SEX_LABEL = { female: 'Female', male: 'Male', unspecified: '—' } as cons
  * Layout mirrors the printed card: header block, then one ruled row per dose,
  * grouped under a visit heading.
  */
-export function RecordCard({ child, visits, summary, scheduleSource, today }: RecordCardProps) {
+export function RecordCard({
+  child,
+  visits,
+  summary,
+  scheduleSource,
+  scheduleUrl,
+  today,
+}: RecordCardProps) {
   const theme = useTheme();
   const c = theme.colors;
+  // Date columns are fixed-width so the table reads as a table; they grow with
+  // text so 'Wed 23 Sep' never wraps to two lines at accessibility sizes.
+  const colDate = { width: 92 * useFontScale(1.6) };
 
   return (
     <View
@@ -48,9 +61,15 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
             </Text>
             <Text variant="title">{child.name}</Text>
           </View>
-          <View style={[styles.stamp, { borderColor: c.primary, borderRadius: theme.radius.sm }]}>
-            <Text variant="label" color="primary">
+          <View
+            accessibilityLabel={`${summary.givenCount} of ${summary.totalDoses} doses given`}
+            style={[styles.stamp, { borderColor: c.primary }]}
+          >
+            <Text variant="label" color="primary" style={styles.stampText}>
               {summary.givenCount}/{summary.totalDoses}
+            </Text>
+            <Text variant="label" color="primary" style={styles.stampSub}>
+              given
             </Text>
           </View>
         </View>
@@ -71,10 +90,10 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
         <Text variant="label" color="inkSoft" style={styles.colVaccine}>
           Vaccine
         </Text>
-        <Text variant="label" color="inkSoft" style={styles.colDate}>
+        <Text variant="label" color="inkSoft" style={colDate}>
           Due
         </Text>
-        <Text variant="label" color="inkSoft" style={styles.colDate}>
+        <Text variant="label" color="inkSoft" style={colDate}>
           Given
         </Text>
       </View>
@@ -124,11 +143,11 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
                 <Text
                   variant="callout"
                   color={overdue ? 'overdue' : 'inkMuted'}
-                  style={[styles.colDate, styles.tabular]}
+                  style={[colDate, styles.tabular]}
                 >
                   {formatDate(item.dueDate)}
                 </Text>
-                <View style={[styles.colDate, styles.givenCell]}>
+                <View style={[colDate, styles.givenCell]}>
                   {given && item.record?.givenDate ? (
                     <>
                       <Icon name="checkmark" size={11} color="given" weight="bold" />
@@ -153,9 +172,21 @@ export function RecordCard({ child, visits, summary, scheduleSource, today }: Re
       ))}
 
       <View style={[styles.footer, { padding: theme.space.lg, borderTopColor: c.line, gap: 2 }]}>
-        <Text variant="caption" color="inkSoft">
-          {scheduleSource}
-        </Text>
+        {scheduleUrl ? (
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`${scheduleSource}. Opens in browser.`}
+            onPress={() => Linking.openURL(scheduleUrl)}
+          >
+            <Text variant="caption" color="primary">
+              {scheduleSource}
+            </Text>
+          </Pressable>
+        ) : (
+          <Text variant="caption" color="inkSoft">
+            {scheduleSource}
+          </Text>
+        )}
         <Text variant="caption" color="inkSoft">
           Generated {formatDateLong(dateToISO(today))} · Kati · Record-keeping aid, not medical
           advice
@@ -185,14 +216,25 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 12,
   },
-  stamp: { borderWidth: 1.5, paddingHorizontal: 8, paddingVertical: 4, alignSelf: 'flex-start' },
+  // A rubber stamp: double-ruled, slightly askew, the way a clinic stamps the card.
+  stamp: {
+    borderWidth: 2,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    transform: [{ rotate: '-5deg' }],
+    opacity: 0.85,
+  },
+  stampText: { fontSize: 16, lineHeight: 18, letterSpacing: 0.5 },
+  stampSub: { fontSize: 9, lineHeight: 11, letterSpacing: 1.2 },
   meta: { flexDirection: 'row', flexWrap: 'wrap' },
   row: { flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingVertical: 8, gap: 8 },
   headRow: { minHeight: 32, paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth },
   visitRow: { paddingVertical: 4 },
   visitLabel: { fontWeight: '600' },
   colVaccine: { flex: 1 },
-  colDate: { width: 92 },
   givenCell: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   tabular: { fontVariant: ['tabular-nums'] },
   footer: { borderTopWidth: StyleSheet.hairlineWidth },
