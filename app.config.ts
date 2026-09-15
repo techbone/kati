@@ -69,6 +69,13 @@ const config: ExpoConfig = {
     reactCompiler: true,
   },
 
+  updates: {
+    url: 'https://u.expo.dev/10f269f9-16cc-42f1-8501-83f4d08d0ed3',
+  },
+  runtimeVersion: {
+    policy: 'appVersion',
+  },
+
   extra: {
     eas: {
       projectId: '10f269f9-16cc-42f1-8501-83f4d08d0ed3',
