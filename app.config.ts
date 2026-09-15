@@ -15,6 +15,11 @@ const config: ExpoConfig = {
   icon: './assets/images/icon.png',
 
   ios: {
+    // Light/dark app icon variants. Regenerate from assets/brand/build-icons.js.
+    icon: {
+      light: './assets/images/icon.png',
+      dark: './assets/images/icon-dark.png',
+    },
     // Must match the App Store Connect record exactly. Change only before the first build.
     bundleIdentifier: 'com.kati.app',
     // Judges download from the US — never geo-restrict the listing.
@@ -33,7 +38,7 @@ const config: ExpoConfig = {
   android: {
     package: 'com.kati.app',
     adaptiveIcon: {
-      backgroundColor: '#E6F4FE',
+      backgroundColor: '#1F5F4A',
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
@@ -50,16 +55,20 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#208AEF',
+        backgroundColor: '#1F5F4A',
         image: './assets/images/splash-icon.png',
-        imageWidth: 76,
+        imageWidth: 150,
+        dark: {
+          backgroundColor: '#131311',
+          image: './assets/images/splash-icon.png',
+        },
       },
     ],
     [
       'expo-notifications',
       {
         icon: './assets/images/notification-icon.png',
-        color: '#208AEF',
+        color: '#1F5F4A',
       },
     ],
   ],
