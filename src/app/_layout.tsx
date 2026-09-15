@@ -3,6 +3,7 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { purchaseService } from '@/hooks/services';
 import { useAppStore } from '@/hooks/useStore';
@@ -62,29 +63,31 @@ export default function RootLayout() {
   const navTheme = theme.scheme === 'dark' ? DarkTheme : DefaultTheme;
 
   return (
-    <ThemeProvider
-      value={{
-        ...navTheme,
-        colors: {
-          ...navTheme.colors,
-          background: theme.colors.bg,
-          card: theme.colors.surface,
-          text: theme.colors.ink,
-          border: theme.colors.line,
-          primary: theme.colors.primary,
-        },
-      }}
-    >
-      <StatusBar style="auto" />
-      <Stack
-        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.colors.bg } }}
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider
+        value={{
+          ...navTheme,
+          colors: {
+            ...navTheme.colors,
+            background: theme.colors.bg,
+            card: theme.colors.surface,
+            text: theme.colors.ink,
+            border: theme.colors.line,
+            primary: theme.colors.primary,
+          },
+        }}
       >
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(onboarding)" />
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="children" options={sheet([0.55, 1])} />
-        <Stack.Screen name="dose" options={sheet([0.8, 1])} />
-      </Stack>
-    </ThemeProvider>
+        <StatusBar style="auto" />
+        <Stack
+          screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.colors.bg } }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(onboarding)" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="children" options={sheet([0.55, 1])} />
+          <Stack.Screen name="dose" options={sheet([0.8, 1])} />
+        </Stack>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

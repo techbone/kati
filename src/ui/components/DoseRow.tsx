@@ -41,6 +41,7 @@ export function DoseRow({ item, onPress, last = false }: DoseRowProps) {
         {
           gap: theme.space.md,
           paddingVertical: theme.space.md,
+          paddingHorizontal: theme.space.lg,
           borderBottomColor: theme.colors.line,
           borderBottomWidth: last ? 0 : StyleSheet.hairlineWidth,
           opacity: pressed ? 0.7 : 1,

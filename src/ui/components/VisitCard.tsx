@@ -7,12 +7,15 @@ import { Card } from '@/ui/components/Card';
 import { DoseRow } from '@/ui/components/DoseRow';
 import { Icon } from '@/ui/components/Icon';
 import { Pill } from '@/ui/components/Pill';
+import { SwipeToGive } from '@/ui/components/SwipeToGive';
 import { Text } from '@/ui/components/Text';
 import { formatDate, formatDueIn, formatOverdue, pluralDoses } from '@/ui/format';
 
 interface VisitCardProps {
   visit: ScheduleVisit;
   onPressDose?: (item: ScheduleItem) => void;
+  /** Swipe-right on a pending dose. Omit to disable the gesture. */
+  onSwipeGive?: (item: ScheduleItem) => void;
 }
 
 /**
@@ -22,7 +25,7 @@ interface VisitCardProps {
  * A finished visit collapses to a single line so the timeline stays about
  * what's next; tap it to see the doses again.
  */
-export function VisitCard({ visit, onPressDose }: VisitCardProps) {
+export function VisitCard({ visit, onPressDose, onSwipeGive }: VisitCardProps) {
   const theme = useTheme();
   const { status, complete } = visit;
   const [expanded, setExpanded] = useState(false);
@@ -112,14 +115,15 @@ export function VisitCard({ visit, onPressDose }: VisitCardProps) {
         )}
       </View>
 
-      <View style={{ paddingHorizontal: theme.space.lg, paddingBottom: theme.space.xs }}>
+      <View style={{ paddingBottom: theme.space.xs }}>
         {visit.items.map((item, i) => (
-          <DoseRow
+          <SwipeToGive
             key={item.dose.id}
-            item={item}
-            onPress={onPressDose}
-            last={i === visit.items.length - 1}
-          />
+            enabled={!!onSwipeGive && item.status !== 'given' && item.status !== 'skipped'}
+            onGive={() => onSwipeGive?.(item)}
+          >
+            <DoseRow item={item} onPress={onPressDose} last={i === visit.items.length - 1} />
+          </SwipeToGive>
         ))}
       </View>
     </Card>

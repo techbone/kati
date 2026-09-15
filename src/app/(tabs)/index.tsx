@@ -7,7 +7,7 @@ import type { ScheduleItem } from '@/contracts';
 import { useActiveChild } from '@/hooks/useActiveChild';
 import { useFontScale } from '@/hooks/useFontScale';
 import { useSchedule } from '@/hooks/useSchedule';
-import { scheduleSource } from '@/hooks/useStore';
+import { scheduleSource, useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
 import {
@@ -21,7 +21,7 @@ import {
   TimelineRow,
   VisitCard,
 } from '@/ui/components';
-import { formatAge } from '@/ui/format';
+import { dateToISO, formatAge } from '@/ui/format';
 
 export default function Home() {
   const theme = useTheme();
@@ -29,6 +29,7 @@ export default function Home() {
   const today = useToday();
   const child = useActiveChild();
   const schedule = useSchedule(child?.id ?? null);
+  const markGiven = useAppStore((s) => s.markGiven);
   const chrome = useFontScale(1.3);
 
   if (!child || !schedule) {
@@ -51,6 +52,12 @@ export default function Home() {
   function onPressDose(item: ScheduleItem) {
     Haptics.selectionAsync();
     router.push({ pathname: '/dose', params: { childId, doseId: item.dose.id } });
+  }
+
+  // Swipe = "given today". Anything else (a past date, a note) goes through the sheet.
+  async function onSwipeGive(item: ScheduleItem) {
+    await markGiven(childId, item.dose.id, dateToISO(today));
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   }
 
   return (
@@ -148,7 +155,7 @@ export default function Home() {
               last={i === visits.length - 1}
             >
               <View style={styles.cardSpacing}>
-                <VisitCard visit={visit} onPressDose={onPressDose} />
+                <VisitCard visit={visit} onPressDose={onPressDose} onSwipeGive={onSwipeGive} />
               </View>
             </TimelineRow>
           </Animated.View>
