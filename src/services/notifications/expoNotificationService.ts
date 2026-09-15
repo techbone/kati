@@ -6,6 +6,21 @@ import type { ReminderPlan } from '@/contracts/reminders';
 import { mapPermissionStatus } from './mapPermission';
 
 /**
+ * iOS only shows a notification while the app is in the foreground if the app
+ * says so. Without this, a reminder that fires while a parent has Kati open
+ * is delivered silently — which is exactly what happened in testing. Set
+ * once at module load; the service is a singleton.
+ */
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+/**
  * Real NotificationService against expo-notifications (SDK 57).
  * Idempotent sync: cancel everything, then schedule the plan (capped by domain ≤48).
  */
