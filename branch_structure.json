@@ -1,0 +1,15 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "b/closeout-plan",
+    "main"
+  ],
+  "parent": {
+    "b/closeout-plan": "main",
+    "main": null
+  },
+  "order": [
+    "main",
+    "b/closeout-plan"
+  ]
+}
