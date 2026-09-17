@@ -1,4 +1,9 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+// Gesture-handler's Pressable, not React Native's: it takes part in the same
+// gesture arbitration as SwipeToGive, so an activated swipe cancels the tap.
+// RN's Pressable runs on the JS responder and fired onPress on release too —
+// a swipe both marked the dose given AND opened the sheet.
+import { Pressable } from 'react-native-gesture-handler';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 
 import type { ScheduleItem } from '@/contracts';

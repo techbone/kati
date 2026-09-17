@@ -16,7 +16,15 @@ import {
   type DoseRecord,
   type ISODate,
 } from '@/contracts';
-import { childRepository, doseRecordRepository, generateId, getDatabase, MIGRATIONS, prefsRepository, runMigrations } from '@/data';
+import {
+  childRepository,
+  doseRecordRepository,
+  generateId,
+  getDatabase,
+  MIGRATIONS,
+  prefsRepository,
+  runMigrations,
+} from '@/data';
 import { planReminders } from '@/domain/reminders';
 import { NPHCDA_SCHEDULE } from '@/domain/schedule';
 import { notificationService } from '@/services/notifications';
@@ -90,6 +98,9 @@ export const useAppStore = create<AppStore>((set, get) => ({
     }
 
     set({ hydrated: true, children, recordsByChild, prefs, activeChildId });
+    // Roll the 48-reminder window forward on every launch. Not awaited: boot
+    // must never wait on the OS notification store.
+    void get().refreshReminders();
   },
 
   async addChild(input) {
@@ -114,6 +125,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       recordsByChild: { ...s.recordsByChild, [id]: [] },
       activeChildId: s.activeChildId ?? id,
     }));
+    await get().refreshReminders();
     return id;
   },
 
@@ -124,6 +136,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
     set((s) => ({
       children: s.children.map((c) => (c.id === id ? { ...c, ...patch, updatedAt } : c)),
     }));
+    await get().refreshReminders(); // a birth-date edit moves every due date
   },
 
   async deleteChild(id) {
@@ -139,6 +152,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       const { [id]: _removed, ...restRecords } = s.recordsByChild;
       return { children: remaining, recordsByChild: restRecords, activeChildId: nextActiveId };
     });
+    await get().refreshReminders(); // otherwise a deleted child's reminders keep firing
   },
 
   async setActiveChild(id) {
@@ -149,7 +163,14 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   async markGiven(childId, doseId, givenDate: ISODate, note) {
     const db = await getDatabase();
-    const record: DoseRecord = { childId, doseId, status: 'given', givenDate, note: note ?? null, updatedAt: now() };
+    const record: DoseRecord = {
+      childId,
+      doseId,
+      status: 'given',
+      givenDate,
+      note: note ?? null,
+      updatedAt: now(),
+    };
     await doseRecordRepository.upsertRecord(db, record);
     upsertRecordInState(set, record);
     await get().refreshReminders();
@@ -157,7 +178,14 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   async markSkipped(childId, doseId, note) {
     const db = await getDatabase();
-    const record: DoseRecord = { childId, doseId, status: 'skipped', givenDate: null, note: note ?? null, updatedAt: now() };
+    const record: DoseRecord = {
+      childId,
+      doseId,
+      status: 'skipped',
+      givenDate: null,
+      note: note ?? null,
+      updatedAt: now(),
+    };
     await doseRecordRepository.upsertRecord(db, record);
     upsertRecordInState(set, record);
     await get().refreshReminders();

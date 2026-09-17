@@ -34,12 +34,23 @@ export function Card({
     borderColor: theme.colors.line,
     borderRadius: theme.radius.lg,
     padding: padded ? theme.space.lg : 0,
-    borderLeftWidth: stripe ? 4 : StyleSheet.hairlineWidth,
-    borderLeftColor: stripe ?? theme.colors.line,
+    paddingLeft: (padded ? theme.space.lg : 0) + (stripe ? STRIPE : 0),
   };
 
+  // A thick left border on a rounded view curves around the corners and
+  // tapers into the hairline edges. An inner bar clipped by the card's own
+  // radius stays a clean, flat stripe top to bottom.
+  const bar = stripe ? (
+    <View pointerEvents="none" style={[styles.stripe, { backgroundColor: stripe }]} />
+  ) : null;
+
   if (!onPress) {
-    return <View style={[styles.base, surface, style]}>{children}</View>;
+    return (
+      <View style={[styles.base, surface, style]}>
+        {bar}
+        {children}
+      </View>
+    );
   }
 
   return (
@@ -49,12 +60,16 @@ export function Card({
       onPress={onPress}
       style={({ pressed }) => [styles.base, surface, pressed && styles.pressed, style]}
     >
+      {bar}
       {children}
     </Pressable>
   );
 }
 
+const STRIPE = 4;
+
 const styles = StyleSheet.create({
   base: { borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
+  stripe: { position: 'absolute', left: 0, top: 0, bottom: 0, width: STRIPE },
   pressed: { opacity: 0.85 },
 });
