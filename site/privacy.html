@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Kati privacy policy — we do not collect your data. Records stay on your device."
+    />
+    <title>Kati — Privacy Policy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="page-privacy">
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="site-nav privacy-nav">
+      <a class="nav-brand" href="./">Kati</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="./">Home</a>
+        <a href="./privacy.html" aria-current="page">Privacy</a>
+      </nav>
+    </header>
+
+    <main class="privacy-main" id="main">
+      <p class="privacy-brand">Kati</p>
+      <h1>Privacy Policy</h1>
+
+      <div class="privacy-content">
+        <p class="privacy-updated"><strong>Last updated:</strong> 14 September 2026</p>
+        <p>
+          Kati is an offline child immunization record keeper. This policy is
+          short because the product is simple: we do not collect your data.
+        </p>
+
+        <h2>What we collect</h2>
+        <p>
+          <strong>Nothing.</strong> Kati has no accounts, no sync server, and no
+          analytics SDK.
+        </p>
+        <ul>
+          <li>
+            Child profiles, dose records, and preferences stay in on-device
+            storage (SQLite) on your phone.
+          </li>
+          <li>
+            We do not upload immunization records to any server operated by
+            Kati.
+          </li>
+          <li>
+            Optional exports (PDF record, backup file) only leave the device
+            when you explicitly share them through your phone’s share sheet.
+          </li>
+        </ul>
+
+        <h2>Purchases</h2>
+        <p>
+          In-app subscriptions are processed by Apple and RevenueCat. Purchase
+          status is checked on-device through their SDKs so the app can unlock
+          Kati Plus features. Kati does not receive your payment card details.
+        </p>
+
+        <h2>Notifications</h2>
+        <p>
+          Local reminders are scheduled on your device only. They are not sent
+          through a push notification server operated by Kati.
+        </p>
+
+        <h2>Children’s data</h2>
+        <p>
+          Records you enter about a child remain under your control on your
+          device. Delete the app (or clear its data) to remove them from that
+          phone.
+        </p>
+
+        <h2>Contact</h2>
+        <p class="muted">
+          Questions about this policy: use the support email listed on the App
+          Store product page for Kati.
+        </p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-brand">Kati</p>
+        <p class="footer-disclaimer">
+          Kati is a record-keeping aid, not medical advice. It does not tell you
+          whether to vaccinate, and it does not replace guidance from a qualified
+          health worker or clinic.
+        </p>
+        <div class="footer-meta">
+          <a href="./">Home</a>
+          <a href="./privacy.html">Privacy policy</a>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module">
+      import { animate, stagger } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const els = [
+          document.querySelector(".privacy-brand"),
+          document.querySelector(".privacy-main h1"),
+          document.querySelector(".privacy-content"),
+        ].filter(Boolean);
+        els.forEach((el) => {
+          el.style.opacity = "0";
+          el.style.transform = "translateY(16px)";
+        });
+        animate(
+          els,
+          { opacity: [0, 1], y: [16, 0] },
+          { delay: stagger(0.08), duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+        );
+      }
+    </script>
+  </body>
+</html>
