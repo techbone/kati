@@ -48,12 +48,21 @@ export default function SettingsTab() {
   const { reminders } = prefs;
   const [busy, setBusy] = useState<'restore' | 'manage' | null>(null);
   const [scheduledCount, setScheduledCount] = useState<number | null>(null);
+  const [permission, setPermission] = useState<'granted' | 'denied' | 'undetermined' | null>(null);
+  // Reminders only fire with both the pref AND iOS permission. Show the switch
+  // as on only when both are true, so it can never claim to be on while
+  // nothing is scheduled — the old "toggle off and on to make it work" bug.
+  const remindersOn = reminders.enabled && permission === 'granted';
 
   // Diagnostics: how many reminders iOS is actually holding. Refreshed each
   // time the tab is focused so it reflects the last sync, not the first.
   useFocusEffect(
     useCallback(() => {
       let live = true;
+      notificationService
+        .getPermission()
+        .then((p) => live && setPermission(p))
+        .catch(() => live && setPermission(null));
       notificationService
         .getScheduledCount()
         .then((n) => live && setScheduledCount(n))
@@ -83,6 +92,7 @@ export default function SettingsTab() {
     // system prompt makes sense. Denied → leave the switch off and point at
     // Settings; never re-prompt on every toggle.
     const state = await notificationService.requestPermission();
+    setPermission(state);
     if (state !== 'granted') {
       Alert.alert(
         'Notifications are off',
@@ -148,15 +158,15 @@ export default function SettingsTab() {
             icon="bell.badge.fill"
             right={
               <Switch
-                value={reminders.enabled}
+                value={remindersOn}
                 onValueChange={toggleReminders}
                 trackColor={{ true: theme.colors.primary, false: theme.colors.line }}
                 accessibilityLabel="Reminders"
               />
             }
-            divider={reminders.enabled}
+            divider={remindersOn}
           />
-          {reminders.enabled ? (
+          {remindersOn ? (
             <>
               <Row
                 label="Time"

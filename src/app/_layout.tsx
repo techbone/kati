@@ -3,6 +3,7 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { AppState } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { purchaseService } from '@/hooks/services';
@@ -32,11 +33,22 @@ export default function RootLayout() {
   const hydrated = useAppStore((s) => s.hydrated);
   const hydrate = useAppStore((s) => s.hydrate);
   const setPremium = useAppStore((s) => s.setPremium);
+  const refreshReminders = useAppStore((s) => s.refreshReminders);
   const [fontsLoaded] = useFonts({ Fraunces_400Regular, Fraunces_600SemiBold });
 
   useEffect(() => {
     hydrate();
   }, [hydrate]);
+
+  // Coming back to the app rolls the reminder window forward and picks up a
+  // permission the user granted in iOS Settings while we were away.
+  useEffect(() => {
+    if (!hydrated) return;
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') refreshReminders();
+    });
+    return () => sub.remove();
+  }, [hydrated, refreshReminders]);
 
   // Entitlement is never gated on: the app boots free and flips to Plus the
   // moment RevenueCat answers. A failed init (no key, no network) is logged and

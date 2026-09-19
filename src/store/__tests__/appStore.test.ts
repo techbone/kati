@@ -141,6 +141,35 @@ describe('useAppStore — persistence', () => {
 });
 
 describe('useAppStore — refreshReminders', () => {
+  // Regression: adding a child used to schedule nothing until some other
+  // mutation happened, so a parent who onboarded and closed the app got no
+  // reminders at all.
+  it('adding a child schedules its reminders without any other action', async () => {
+    await useAppStore.getState().hydrate();
+    mockSchedule.mockClear();
+
+    await useAppStore
+      .getState()
+      .addChild({ name: 'Amina', birthDate: asISODate('2026-01-01'), sex: 'female' });
+
+    expect(mockSchedule).toHaveBeenCalled();
+  });
+
+  // Regression: deleting a child left their reminders scheduled.
+  it('deleting a child re-plans, so their reminders stop', async () => {
+    await useAppStore.getState().hydrate();
+    const id = await useAppStore
+      .getState()
+      .addChild({ name: 'Amina', birthDate: asISODate('2026-01-01'), sex: 'female' });
+    mockCancelAll.mockClear();
+    mockSchedule.mockClear();
+
+    await useAppStore.getState().deleteChild(id);
+
+    expect(mockCancelAll).toHaveBeenCalled();
+    expect(mockSchedule).not.toHaveBeenCalled();
+  });
+
   it('syncs a plan when reminders are enabled and permission is granted', async () => {
     await useAppStore.getState().hydrate();
     await useAppStore
