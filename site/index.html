@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Kati is an offline-first child immunization tracker built on Nigeria’s national schedule. Replaces the paper child health card."
+    />
+    <title>Kati — The immunization record that stays with you</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="site-nav">
+      <a class="nav-brand" href="./">Kati</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#problem">Problem</a>
+        <a href="#solution">Solution</a>
+        <a href="./privacy.html">Privacy</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-label="Introduction">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <p class="hero-brand">Kati</p>
+            <h1 class="hero-headline">
+              The immunization record that stays with you
+            </h1>
+            <p class="hero-lead">
+              An offline child immunization tracker built on Nigeria’s national
+              schedule — so parents never lose the paper card again.
+            </p>
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="#how">See how it works</a>
+              <a class="btn-ghost" href="./privacy.html">Privacy policy</a>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-hidden="true">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="phone-notch"></div>
+                <div class="phone-status">
+                  <span>9:41</span>
+                  <span>●●●</span>
+                </div>
+                <div class="phone-body">
+                  <div>
+                    <p class="phone-child">Amara</p>
+                    <p class="phone-sub">Born 12 Jan 2026</p>
+                  </div>
+
+                  <div class="mock-visit">
+                    <div class="mock-label">
+                      <span class="mock-label-dot"></span>
+                      Next clinic visit
+                    </div>
+                    <p class="mock-visit-title">6 weeks</p>
+                    <p class="mock-visit-date">23 Feb 2026</p>
+                    <div class="mock-visit-meta">
+                      <strong>In 5 days</strong>
+                      <span>3 doses</span>
+                    </div>
+                  </div>
+
+                  <ul class="mock-timeline">
+                    <li class="mock-row">
+                      <div class="mock-rail">
+                        <span class="mock-dot given"></span>
+                      </div>
+                      <div class="mock-row-body">
+                        <p class="mock-row-title">At birth</p>
+                        <p class="mock-row-meta">
+                          <span class="mock-status-given">Given</span> · BCG, OPV0, HepB
+                        </p>
+                      </div>
+                    </li>
+                    <li class="mock-row">
+                      <div class="mock-rail">
+                        <span class="mock-dot due"></span>
+                      </div>
+                      <div class="mock-row-body">
+                        <p class="mock-row-title">6 weeks</p>
+                        <p class="mock-row-meta">
+                          <span class="mock-status-due">Due soon</span> · Penta1, PCV1, Rota1, OPV1
+                        </p>
+                      </div>
+                    </li>
+                    <li class="mock-row">
+                      <div class="mock-rail">
+                        <span class="mock-dot upcoming"></span>
+                      </div>
+                      <div class="mock-row-body">
+                        <p class="mock-row-title">10 weeks</p>
+                        <p class="mock-row-meta">Upcoming · Penta2, PCV2, Rota2, OPV2</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="phone-home"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="problem">
+        <div class="section-split">
+          <div class="reveal">
+            <p class="section-eyebrow">The problem</p>
+            <h2 class="section-title">Paper cards get lost. Clinic timing slips.</h2>
+          </div>
+          <p class="section-body reveal">
+            Across Nigeria, a child’s immunization history often lives on a
+            single paper health card. When that card goes missing — or when the
+            next visit date is unclear — parents arrive late, clinics start from
+            scratch, and the schedule is harder to follow. Kati exists to keep
+            that record on the phone parents already carry.
+          </p>
+        </div>
+      </section>
+
+      <div class="band">
+        <section class="section" id="solution">
+          <div class="section-split">
+            <div class="reveal">
+              <p class="section-eyebrow">The solution</p>
+              <h2 class="section-title">
+                Birth date in. Full schedule, reminders, and a clinic-ready record.
+              </h2>
+            </div>
+            <p class="section-body reveal">
+              Enter a child’s birth date and Kati builds the visit plan from
+              Nigeria’s national immunization schedule (NPHCDA). Local reminders
+              surface before each clinic visit. When you get there, you have a
+              clear record to show — not a faded card at the bottom of a bag.
+              Everything stays on the device. No account required.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <section class="section" id="how">
+        <div class="reveal">
+          <p class="section-eyebrow">How it works</p>
+          <h2 class="section-title">Three steps. Nothing to sync.</h2>
+          <p class="section-body">
+            Designed for parents who need clarity, not another login.
+          </p>
+        </div>
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step-num" aria-hidden="true">1</span>
+            <div>
+              <h3>Add your child</h3>
+              <p>Name and birth date — that’s enough to generate the schedule.</p>
+            </div>
+          </li>
+          <li class="step reveal">
+            <span class="step-num" aria-hidden="true">2</span>
+            <div>
+              <h3>See what’s next</h3>
+              <p>
+                Visit by visit, with due dates and dose status you can read at a
+                glance.
+              </p>
+            </div>
+          </li>
+          <li class="step reveal">
+            <span class="step-num" aria-hidden="true">3</span>
+            <div>
+              <h3>Get reminded. Show the record.</h3>
+              <p>
+                Local reminders before clinic day. Export or share a record when
+                you need to show it.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <div class="band">
+        <section class="section" id="privacy">
+          <div class="reveal">
+            <p class="section-eyebrow">Privacy by design</p>
+            <h2 class="section-title">Children’s health data stays on your phone.</h2>
+            <p class="section-body">
+              Kati has no backend, no accounts, and no analytics SDK. Profiles and
+              dose records live in on-device SQLite. That is a product decision —
+              not a shortcut — so App Store privacy labels can say data is not
+              collected.
+            </p>
+            <ul class="privacy-points">
+              <li class="reveal">No sync server. Nothing uploads in the background.</li>
+              <li class="reveal">Reminders are scheduled locally on your device.</li>
+              <li class="reveal">
+                Exports leave the phone only when you share them yourself.
+              </li>
+            </ul>
+            <p class="section-body" style="margin-top: 1.75rem">
+              <a href="./privacy.html">Read the full privacy policy →</a>
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-brand">Kati</p>
+        <p class="footer-disclaimer">
+          Kati is a record-keeping aid, not medical advice. It does not tell you
+          whether to vaccinate, and it does not replace guidance from a qualified
+          health worker or clinic.
+        </p>
+        <div class="footer-meta">
+          <a href="./privacy.html">Privacy policy</a>
+          <span>Built for RevenueCat Shipaton 2026 — Peace Prize</span>
+          <span>Coming to the App Store</span>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
