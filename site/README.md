@@ -1,50 +1,35 @@
-# Kati marketing site
+# Marketing site moved
 
-Static landing page and privacy policy for App Store Connect and the public web.
+The public landing page and privacy policy now live in [`docs/`](../docs/) so
+GitHub Pages can publish them (Pages only allows `/` or `/docs` for
+branch-based deploys).
 
-This folder is separate from the Expo mobile app (`src/`). Open these files in a
-browser — they are not bundled into the iOS build.
-
-## Local preview
-
-From the repo root:
-
-```bash
-npx --yes serve site
-```
-
-Or open `site/index.html` directly. Motion loads from a CDN, so you need a
-network connection for animations.
+| File | Role |
+|---|---|
+| [`docs/index.html`](../docs/index.html) | Landing page |
+| [`docs/privacy.html`](../docs/privacy.html) | Privacy policy (ASC URL) |
+| [`docs/styles.css`](../docs/styles.css) | Shared styles |
+| [`docs/main.js`](../docs/main.js) | Landing animations |
 
 ## GitHub Pages
 
 1. Repo **Settings → Pages**.
 2. Source: **Deploy from a branch**.
-3. Branch: `main`, folder: **`/site`** (or `/` if you prefer root and move files later).
+3. Branch: `main`, folder: **`/docs`**.
+4. Save.
 
-### Privacy URL for App Store Connect
+Live URLs (org `techbone`, repo `kati`):
 
-After Pages is live:
+- Site: `https://techbone.github.io/kati/`
+- Privacy: `https://techbone.github.io/kati/privacy.html`
 
-| Pages folder setting | Privacy policy URL |
-|---|---|
-| `/site` | `https://<owner>.github.io/kati/privacy.html` |
-| `/` (root) with site files at root | `https://<owner>.github.io/kati/privacy.html` |
-| `/` with this `site/` folder still nested | `https://<owner>.github.io/kati/site/privacy.html` |
+Paste the privacy URL into App Store Connect → App Privacy / Privacy Policy URL.
 
-For org `techbone` and repo `kati` with Pages set to `/site`:
+## Local preview
 
-`https://techbone.github.io/kati/privacy.html`
+```bash
+npx --yes serve docs
+```
 
-Paste that URL into App Store Connect → App Privacy / Privacy Policy URL.
-
-## Files
-
-| File | Role |
-|---|---|
-| `index.html` | Landing page |
-| `privacy.html` | Privacy policy (ASC URL target) |
-| `styles.css` | Shared styles |
-| `main.js` | Motion animations for the landing page |
-
-Brand colours match the app (`#1F5F4A` primary, Fraunces display).
+Engineering markdown under `docs/` (ARCHITECTURE, TRACKS, etc.) stays in the
+same folder; Pages serves `index.html` as the homepage.
