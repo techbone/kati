@@ -8,6 +8,7 @@ branch-based deploys).
 |---|---|
 | [`docs/index.html`](../docs/index.html) | Landing page |
 | [`docs/privacy.html`](../docs/privacy.html) | Privacy policy (ASC URL) |
+| [`docs/terms.html`](../docs/terms.html) | Terms of Use / EULA (ASC URL) |
 | [`docs/styles.css`](../docs/styles.css) | Shared styles |
 | [`docs/main.js`](../docs/main.js) | Landing animations |
 
@@ -22,8 +23,11 @@ Live URLs (org `techbone`, repo `kati`):
 
 - Site: `https://techbone.github.io/kati/`
 - Privacy: `https://techbone.github.io/kati/privacy.html`
+- Terms of Use: `https://techbone.github.io/kati/terms.html`
 
 Paste the privacy URL into App Store Connect → App Privacy / Privacy Policy URL.
+Paste the Terms URL into the App Store **Description** (and/or Custom EULA) so
+guideline 3.1.2 is satisfied on the product page.
 
 ## Local preview
 
