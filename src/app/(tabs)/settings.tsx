@@ -9,8 +9,13 @@ import {
   isExpoGo,
   notificationService,
   presentCustomerCenter,
+  presentPaywallIfNeeded,
   purchaseService,
 } from '@/hooks/services';
+
+/** Live GitHub Pages URLs — required on-product and discoverable in-app for ASC 3.1.2. */
+const PRIVACY_URL = 'https://techbone.github.io/kati/privacy.html';
+const TERMS_URL = 'https://techbone.github.io/kati/terms.html';
 import { scheduleSource, useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
@@ -46,7 +51,7 @@ export default function SettingsTab() {
   const children = useAppStore((s) => s.children);
   const isPremium = useAppStore((s) => s.isPremium);
   const { reminders } = prefs;
-  const [busy, setBusy] = useState<'restore' | 'manage' | null>(null);
+  const [busy, setBusy] = useState<'restore' | 'manage' | 'upgrade' | null>(null);
   const [scheduledCount, setScheduledCount] = useState<number | null>(null);
   const [permission, setPermission] = useState<'granted' | 'denied' | 'undetermined' | null>(null);
   // Reminders only fire with both the pref AND iOS permission. Show the switch
@@ -115,6 +120,25 @@ export default function SettingsTab() {
       : [...reminders.leadDays, days].sort((a, b) => b - a);
     if (next.length === 0) return; // reminders on with nothing selected is a trap
     updateReminders({ leadDays: next });
+  }
+
+  async function onUpgrade() {
+    setBusy('upgrade');
+    try {
+      // App Review looks for IAPs from Settings. Always present the paywall when
+      // free so Yearly / Lifetime are one tap away (not only behind gated actions).
+      const outcome = await presentPaywallIfNeeded();
+      if (outcome === 'error') {
+        Alert.alert(
+          'Couldn’t open plans',
+          'Check your network connection and try again. Purchases use your Apple ID.',
+        );
+      }
+    } catch (err) {
+      Alert.alert('Couldn’t open plans', err instanceof Error ? err.message : 'Try again later.');
+    } finally {
+      setBusy(null);
+    }
   }
 
   async function onRestore() {
@@ -277,7 +301,20 @@ export default function SettingsTab() {
                 ) : undefined
               }
             />
-          ) : null}
+          ) : (
+            <Row
+              label="Upgrade to Kati Plus"
+              detail="See Monthly, Yearly, and Lifetime plans"
+              onPress={onUpgrade}
+              right={
+                busy === 'upgrade' ? (
+                  <Text variant="caption" color="inkSoft">
+                    Opening…
+                  </Text>
+                ) : undefined
+              }
+            />
+          )}
           <Row
             label="Restore purchases"
             onPress={onRestore}
@@ -300,6 +337,16 @@ export default function SettingsTab() {
             detail={scheduleSource.name}
             value={scheduleSource.version}
             onPress={() => Linking.openURL(scheduleSource.url)}
+          />
+          <Row
+            label="Privacy Policy"
+            detail="What stays on this phone"
+            onPress={() => Linking.openURL(PRIVACY_URL)}
+          />
+          <Row
+            label="Terms of Use"
+            detail="Including Kati Plus subscriptions"
+            onPress={() => Linking.openURL(TERMS_URL)}
           />
           <Row
             label="Version"
