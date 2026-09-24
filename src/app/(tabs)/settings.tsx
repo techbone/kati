@@ -12,15 +12,15 @@ import {
   presentPaywallIfNeeded,
   purchaseService,
 } from '@/hooks/services';
-
-/** Live GitHub Pages URLs — required on-product and discoverable in-app for ASC 3.1.2. */
-const PRIVACY_URL = 'https://techbone.github.io/kati/privacy.html';
-const TERMS_URL = 'https://techbone.github.io/kati/terms.html';
 import { scheduleSource, useAppStore } from '@/hooks/useStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useToday } from '@/hooks/useToday';
 import { Avatar, Card, Row, Screen, Text } from '@/ui/components';
 import { formatAge } from '@/ui/format';
+
+/** Live GitHub Pages URLs — required on-product and discoverable in-app for ASC 3.1.2. */
+const PRIVACY_URL = 'https://techbone.github.io/kati/privacy.html';
+const TERMS_URL = 'https://techbone.github.io/kati/terms.html';
 
 /** Days-before-due options. Order matters: the contract wants leadDays descending. */
 const LEAD_OPTIONS: { days: number; label: string }[] = [
