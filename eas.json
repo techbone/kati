@@ -37,6 +37,10 @@
         "appleId": "abdullahabubakar461@gmail.com",
         "ascAppId": "6811788140",
         "appleTeamId": "UT6TGB5GRK"
+      },
+      "android": {
+        "track": "internal",
+        "releaseStatus": "draft"
       }
     }
   }
