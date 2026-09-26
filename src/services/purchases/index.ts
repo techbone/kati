@@ -12,7 +12,9 @@
  * Ops checklist (Abdullah): RC entitlement must match; packages
  * `monthly` | `yearly` | `lifetime`; 7-day trial; EAS dev build on three
  * phones; sandbox purchase + restore-after-reinstall; fill eas.json submit
- * IDs; host assets/legal/privacy.html and paste URL into App Store Connect.
+ * IDs; host docs/privacy.html + docs/terms.html and paste URLs into App Store
+ * Connect and Play Console. Android uses `goog_…` via revenueCatApiKeyAndroid;
+ * iOS uses `appl_…` via revenueCatApiKeyIos (EAS secrets in production).
  */
 export { KATI_PLUS_ENTITLEMENT, PACKAGE_IDS, type KatiPackageId } from './constants';
 export { createMockPurchaseService } from './mockPurchaseService';

@@ -118,6 +118,49 @@ demoed to a judge; both need to actually work.
 
 ---
 
+## Play Store + Android RevenueCat
+
+Same product, second store. Package id stays **`com.kati.app`**.
+
+### Code / EAS (already in repo)
+
+- [`app.config.ts`](../../app.config.ts): `android.versionCode`, dual keys
+  `revenueCatApiKeyIos` / `revenueCatApiKeyAndroid`.
+- Purchase service picks `appl_…` vs `goog_…` by `Platform.OS`.
+- [`eas.json`](../../eas.json) `submit.production.android`: internal track, draft
+  release. Do **not** commit the Google service-account JSON — use
+  `eas submit` / EAS credentials when ready.
+
+### Your checklist (Play Console / Cloud / RC)
+
+1. Create the Play app with application id `com.kati.app`.
+2. Store listing, content rating, Data safety; privacy + terms:
+   - `https://techbone.github.io/kati/privacy.html`
+   - `https://techbone.github.io/kati/terms.html`
+3. Create Play Billing products: Monthly, Yearly (7-day trial), Lifetime —
+   product ids aligned with iOS / RevenueCat packages.
+4. Add license-tester Gmail accounts for purchase testing.
+5. Google Cloud service account with Play Developer API access (EAS Submit +
+   RevenueCat).
+6. RevenueCat → add **Google Play** app; paste Play credentials; link Android
+   products to entitlement **`kati_plus_pro`** and the same offering/paywall
+   (include Lifetime).
+7. EAS secrets: `EXPO_PUBLIC_REVENUECAT_API_KEY_IOS` (`appl_…`) and
+   `EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID` (`goog_…`) on production.
+
+### Build / submit
+
+```bash
+eas build -p android --profile development
+eas build -p android --profile production
+eas submit -p android --profile production
+```
+
+Smoke: Settings → Upgrade → Monthly / Yearly / Lifetime; purchase + restore on a
+license-tester account.
+
+---
+
 ## The notification trap
 
 iOS keeps only the **64 soonest** pending local notifications and silently drops

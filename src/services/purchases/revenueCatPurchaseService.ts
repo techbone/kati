@@ -13,15 +13,19 @@ import { KATI_PLUS_ENTITLEMENT } from './constants';
 import { hasActiveEntitlement, mapPurchasesPackage } from './mapPackage';
 
 type Extra = {
-  revenueCatApiKey?: string;
+  revenueCatApiKeyIos?: string;
+  revenueCatApiKeyAndroid?: string;
 };
 
 function readApiKey(): string {
   const extra = Constants.expoConfig?.extra as Extra | undefined;
-  const key = extra?.revenueCatApiKey?.trim();
+  const key =
+    Platform.OS === 'android'
+      ? extra?.revenueCatApiKeyAndroid?.trim()
+      : extra?.revenueCatApiKeyIos?.trim();
   if (!key) {
     throw new Error(
-      'Missing RevenueCat API key. Set extra.revenueCatApiKey in app.config.ts or EXPO_PUBLIC_REVENUECAT_API_KEY.',
+      'Missing RevenueCat API key. Set extra.revenueCatApiKeyIos / revenueCatApiKeyAndroid in app.config.ts or EXPO_PUBLIC_REVENUECAT_API_KEY_IOS / _ANDROID.',
     );
   }
   return key;

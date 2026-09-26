@@ -36,7 +36,10 @@ const config: ExpoConfig = {
   },
 
   android: {
+    // Must match the Play Console application id. Change only before the first upload.
     package: 'com.kati.app',
+    // Play requires a monotonic integer; EAS production autoIncrement bumps it on each build.
+    versionCode: 1,
     adaptiveIcon: {
       backgroundColor: '#1F5F4A',
       foregroundImage: './assets/images/android-icon-foreground.png',
@@ -89,10 +92,13 @@ const config: ExpoConfig = {
     eas: {
       projectId: '10f269f9-16cc-42f1-8501-83f4d08d0ed3',
     },
-    // Public SDK key (safe in the client). Test Store key for sandbox / Shipaton
-    // judging. Swap to the iOS App Store key for production/TestFlight builds —
-    // never ship a Test Store key to App Review.
-    revenueCatApiKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY ?? 'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
+    // Public SDK keys (safe in the client). Use platform-specific store keys in
+    // production: appl_… (iOS) and goog_… (Android). Fallbacks are RevenueCat
+    // Test Store for local/dev only — never ship test_… to App Review or Play.
+    revenueCatApiKeyIos:
+      process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS ?? 'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
+    revenueCatApiKeyAndroid:
+      process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID ?? 'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
   },
 };
 
