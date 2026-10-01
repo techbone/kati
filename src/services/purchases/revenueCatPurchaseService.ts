@@ -28,6 +28,12 @@ function readApiKey(): string {
       'Missing RevenueCat API key. Set extra.revenueCatApiKeyIos / revenueCatApiKeyAndroid in app.config.ts or EXPO_PUBLIC_REVENUECAT_API_KEY_IOS / _ANDROID.',
     );
   }
+  // Release binaries with a Test Store key cannot load App Store / Play products.
+  if (!__DEV__ && key.startsWith('test_')) {
+    throw new Error(
+      '[purchases] Test Store API key (test_…) in a release build. Use appl_… (iOS) or goog_… (Android). This causes RC Error 23 / empty offerings.',
+    );
+  }
   return key;
 }
 

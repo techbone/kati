@@ -4,6 +4,44 @@ import type { ExpoConfig } from 'expo/config';
  * Track C owns this file. Anyone else changing it must say so in standup —
  * a plugin change invalidates everyone's development build.
  */
+
+/** Store builds must not bake in RevenueCat Test Store keys (Error 23 / empty offerings). */
+function revenueCatKey(
+  envNames: string[],
+  platform: 'ios' | 'android',
+  devFallback: string,
+): string {
+  const fromEnv = envNames.map((n) => process.env[n]?.trim()).find((v) => Boolean(v));
+  const profile = process.env.EAS_BUILD_PROFILE;
+  const storeBuild = profile === 'production' || profile === 'preview';
+  const prefix = platform === 'ios' ? 'appl_' : 'goog_';
+  const hint = envNames.join(' or ');
+
+  if (storeBuild) {
+    if (!fromEnv) {
+      throw new Error(
+        `Missing ${hint} for EAS profile "${profile}". Set it in Expo → Project → Environment variables to a ${prefix}… public SDK key.`,
+      );
+    }
+    if (fromEnv.startsWith('test_')) {
+      throw new Error(
+        `RevenueCat key for ${platform} is a Test Store key (test_…). ${profile} builds need a ${prefix}… key or App Store / Play offerings stay empty (RC Error 23).`,
+      );
+    }
+    if (platform === 'ios' && fromEnv.startsWith('goog_')) {
+      throw new Error(`iOS builds need an appl_… key, not goog_…. Check ${hint}.`);
+    }
+    if (platform === 'android' && fromEnv.startsWith('appl_')) {
+      throw new Error(
+        `Android builds need a goog_… key, not appl_…. Add EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID (do not reuse the iOS key).`,
+      );
+    }
+    return fromEnv;
+  }
+
+  return fromEnv || devFallback;
+}
+
 const config: ExpoConfig = {
   name: 'Kati',
   slug: 'kati',
@@ -92,13 +130,20 @@ const config: ExpoConfig = {
     eas: {
       projectId: '10f269f9-16cc-42f1-8501-83f4d08d0ed3',
     },
-    // Public SDK keys (safe in the client). Use platform-specific store keys in
-    // production: appl_… (iOS) and goog_… (Android). Fallbacks are RevenueCat
-    // Test Store for local/dev only — never ship test_… to App Review or Play.
-    revenueCatApiKeyIos:
-      process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS ?? 'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
-    revenueCatApiKeyAndroid:
-      process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID ?? 'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
+    // Public SDK keys (safe in the client). Production/preview EAS builds require
+    // appl_… / goog_… via Expo project env — a silent test_… fallback causes RC
+    // Error 23 (empty offerings) on real stores. Local/dev may use Test Store.
+    // iOS also accepts legacy EXPO_PUBLIC_REVENUECAT_API_KEY (already set on EAS).
+    revenueCatApiKeyIos: revenueCatKey(
+      ['EXPO_PUBLIC_REVENUECAT_API_KEY_IOS', 'EXPO_PUBLIC_REVENUECAT_API_KEY'],
+      'ios',
+      'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
+    ),
+    revenueCatApiKeyAndroid: revenueCatKey(
+      ['EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID'],
+      'android',
+      'test_vfzxLgSZyofMOuXpbYqJRzkTkij',
+    ),
   },
 };
 
