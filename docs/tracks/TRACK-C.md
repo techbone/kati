@@ -145,8 +145,21 @@ Same product, second store. Package id stays **`com.kati.app`**.
 6. RevenueCat → add **Google Play** app; paste Play credentials; link Android
    products to entitlement **`kati_plus_pro`** and the same offering/paywall
    (include Lifetime).
-7. EAS secrets: `EXPO_PUBLIC_REVENUECAT_API_KEY_IOS` (`appl_…`) and
-   `EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID` (`goog_…`) on production.
+7. **EAS env (required for production / preview):** In Expo → Project →
+   Environment variables:
+
+   | Variable | Value | Notes |
+   |---|---|---|
+   | `EXPO_PUBLIC_REVENUECAT_API_KEY` **or** `_IOS` | `appl_…` | Legacy name already on EAS production is fine for iOS |
+   | `EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID` | `goog_…` | Required for Play; do **not** reuse the `appl_…` key |
+
+   `app.config.ts` **fails the EAS build** if production/preview would bake in a
+   missing or `test_…` key. That silent fallback caused RC **Error 23 / empty
+   offerings** when the code looked for `_IOS` / `_ANDROID` while only the
+   legacy `EXPO_PUBLIC_REVENUECAT_API_KEY` was set. Development builds may still
+   use the Test Store fallback for local work.
+
+   After changing env vars, **rebuild** — keys are baked at build time.
 
 ### Build / submit
 
